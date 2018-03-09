@@ -1,7 +1,8 @@
 #pragma once
+
 #include <string>
-#include "BigDec.h"
 #include "BigNum.h"
+#include "BigDec.h"
 #include "BigInt.h"
 #include "BigFloat.h"
 using namespace std;
