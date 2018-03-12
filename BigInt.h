@@ -3,7 +3,7 @@
 
 class BigInt: public BigNum {
 public:
-    BigInt(const string&);
+//     BigInt(const string&);
     BigInt(const bool* const);
     BigInt(const BigInt&);
     BigInt(long long);
