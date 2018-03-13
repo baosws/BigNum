@@ -1,2 +1,4 @@
 /Truong/*
-!/Truong/BigNum/*.cpp
+!/Truong/BigNum/BigInt.cpp
+!/Truong/BigNum/BigNum.cpp
+!/Truong/BigNum/includes.h
