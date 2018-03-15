@@ -1,6 +1,6 @@
 #include "../includes.h"
 
-BigInt BigInt::operator~() const {
+BigInt BigInt::operator!() const {
 	return BigInt(!(data[0] || data[1]));
 }
 
