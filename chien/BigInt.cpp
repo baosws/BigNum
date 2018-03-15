@@ -10,15 +10,9 @@ BigInt::BigInt(const string& decStr)
 // 			this->set_bit(i, 1);
 }
 
-BigInt::BigInt(const bool* const binArr): BigNum(binArr)
-{	
-}
+BigInt::BigInt(const bool* const binArr): BigNum(binArr) {}
 
-BigInt::BigInt(const BigInt& bgNum)
-{
-	for(int i = 0; i<128;i++)
-		this->set_bit(i, bgNum.get_bit(i)); 
-}
+BigInt::BigInt(const BigInt& bgNum) : BigNum(bgNum) {}
 
 BigInt::BigInt(long long llNum)
 {
@@ -28,13 +22,14 @@ BigInt::BigInt(long long llNum)
 
 BigInt::BigInt(int num): BigInt((long long) num) {}
 
+// need more checking!!!
 BigInt BigInt::operator*(const BigInt& Mutiplier) const
 {
 	BigInt A(0);
 	BigInt Q(Mutiplier);
 	bool	Q_1 = 0;
 	
-	for(int i = 0; i < 127; i++)
+	for(int i = 0; i < LENGTH_OF_BITS; i++)
 	{
 		switch(Q.get_bit(0) - Q_1)
 		{
@@ -56,8 +51,8 @@ BigInt BigInt::operator*(const BigInt& Mutiplier) const
 		if(A != BigInt(0)) { // overflow
 			// insert exception handling here
 		}
-		return Q;
 	}
+	return Q;
 }
 BigInt BigInt::operator/(const BigInt& Divisor) const
 {
@@ -83,7 +78,7 @@ BigInt BigInt::operator/(const BigInt& Divisor) const
 			A = A + Divisor;
 		}
 	}
-	if(flag = true)
+	if(flag == true)
 		Q = 0-Q;
 	return Q;
 }
