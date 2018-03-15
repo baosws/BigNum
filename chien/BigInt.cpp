@@ -1,16 +1,16 @@
-@include "../includes"
+#include "../includes.h"
 
 BigInt::BigInt(const string& decStr)
 {
-	string binStr = decStrToBinStr(decStr);//hoặc là bool*
-	for(int i = 0; i<128;i++)
-		if(binStr[i] == '0')
-			this->set_bit(i, 0);
-		else
-			this->set_bit(i, 1);
+// 	string binStr = decStrToBinStr(decStr);//hoặc là bool*
+// 	for(int i = 0; i<128;i++)
+// 		if(binStr[i] == '0')
+// 			this->set_bit(i, 0);
+// 		else
+// 			this->set_bit(i, 1);
 }
 
-BigInt::BigInt(const bool* binArr const): BigNum(binArr)
+BigInt::BigInt(const bool* const binArr): BigNum(binArr)
 {	
 }
 
@@ -22,14 +22,16 @@ BigInt::BigInt(const BigInt& bgNum)
 
 BigInt::BigInt(long long llNum)
 {
-	
+	this->data[0] = llNum;
+	this->data[1] = 0;
 }
-    
+
+BigInt::BigInt(int num): BigInt((long long) num) {}
 
 BigInt BigInt::operator*(const BigInt& Mutiplier) const
 {
-	BigInt 	A = new BigInt(0);
-	BigInt 	Q = new BigInt(Mutiplier);
+	BigInt A(0);
+	BigInt Q(Mutiplier);
 	bool	Q_1 = 0;
 	
 	for(int i = 0; i < 127; i++)
@@ -51,8 +53,9 @@ BigInt BigInt::operator*(const BigInt& Mutiplier) const
 		A.set_bit(127, A.get_bit(126));
 		
 		//Check overflow
-		if(A != new BigInt(0))
-			#overflow
+		if(A != BigInt(0)) { // overflow
+			// insert exception handling here
+		}
 		return Q;
 	}
 }
@@ -60,8 +63,8 @@ BigInt BigInt::operator/(const BigInt& Divisor) const
 {
 	bool flag = this->get_bit(127) != Divisor.get_bit(127);
 
-	BigInt A = new BigInt(0);
-	BigInt Q = new BigInt(*this); //Q = Dividend
+	BigInt A(0);
+	BigInt Q(*this); //Q = Dividend
 	for(int i = 0;i < 128; i++)
 	{
 		//shift: [A,Q] << 1
@@ -88,7 +91,7 @@ BigInt BigInt::operator/(const BigInt& Divisor) const
 
 BigInt BigInt::operator<<(int amountBits) const
 {
-	BigInt res = new BigInt(*this); //0000.1001 << 2 = 0010.0100
+	BigInt res(*this); //0000.1001 << 2 = 0010.0100
 		
 	if(amountBits == 128)
 		res = 0;
@@ -105,7 +108,7 @@ BigInt BigInt::operator<<(int amountBits) const
 
 BigInt BigInt::operator>>(int amountBits) const
 {
-	BigInt res = new BigInt(*this); //0000.1001 << 2 = 0010.0100
+	BigInt res(*this); //0000.1001 << 2 = 0010.0100
 		
 	if(amountBits >= 128)
 	{
