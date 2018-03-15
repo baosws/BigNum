@@ -14,25 +14,25 @@ public:
     BigInt operator*(const BigInt&) const;
     BigInt operator/(const BigInt&) const;
 
-//     BigInt& operator+=(const BigInt&);
-//     BigInt& operator-=(const BigInt&);
-//     BigInt& operator*=(const BigInt&);
-//     BigInt& operator/=(const BigInt&);
+    BigInt& operator+=(const BigInt&);
+    BigInt& operator-=(const BigInt&);
+    BigInt& operator*=(const BigInt&);
+    BigInt& operator/=(const BigInt&);
 
-//     BigInt operator~() const;
-//     BigInt operator!() const;
-//     BigInt operator&(const BigInt&) const;
-//     BigInt operator|(const BigInt&) const;
-//     BigInt operator^(const BigInt&) const;
-//     BigInt operator<<() const;
-//     BigInt operator>>() const;
+    BigInt operator~() const;
+    BigInt operator!() const;
+    BigInt operator&(const BigInt&) const;
+    BigInt operator|(const BigInt&) const;
+    BigInt operator^(const BigInt&) const;
+    BigInt operator<<() const;
+    BigInt operator>>() const;
     
-//     BigInt& operator=(const BigInt&);
-//     BigInt& operator&=(const BigInt&);
-//     BigInt& operator|=(const BigInt&);
-//     BigInt& operator^=(const BigInt&);
-//     BigInt& operator<<=(int);
-//     BigInt& operator>>=(int);
+    BigInt& operator=(const BigInt&);
+    BigInt& operator&=(const BigInt&);
+    BigInt& operator|=(const BigInt&);
+    BigInt& operator^=(const BigInt&);
+    BigInt& operator<<=(int);
+    BigInt& operator>>=(int);
 
     bool operator==(const BigInt&) const;
     bool operator!=(const BigInt&) const;
@@ -41,6 +41,6 @@ public:
     bool operator<=(const BigInt&) const;
     bool operator>=(const BigInt&) const;
 
-//     operator bool() const;
+    operator bool() const;
     operator bool*() const;
 };
