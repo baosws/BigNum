@@ -1,14 +1,14 @@
 #include "../includes.h"
 
-BigInt::BigInt(const string& decStr)
-{
+//BigInt::BigInt(const string& decStr)
+//{
 // 	string binStr = decStrToBinStr(decStr);//hoặc là bool*
 // 	for(int i = 0; i<128;i++)
 // 		if(binStr[i] == '0')
 // 			this->set_bit(i, 0);
 // 		else
 // 			this->set_bit(i, 1);
-}
+//}
 
 BigInt::BigInt(const bool* const binArr): BigNum(binArr) {}
 
@@ -54,6 +54,7 @@ BigInt BigInt::operator*(const BigInt& Mutiplier) const
 	}
 	return Q;
 }
+
 BigInt BigInt::operator/(const BigInt& Divisor) const
 {
 	bool flag = this->get_bit(127) != Divisor.get_bit(127);
@@ -72,7 +73,6 @@ BigInt BigInt::operator/(const BigInt& Divisor) const
 		if(A.get_bit(127) == 0) //(A >=0)?
 			Q.set_bit(0, 1);		
 		else
-
 		{
 			Q.set_bit(0, 0);
 			A = A + Divisor;
@@ -124,5 +124,3 @@ BigInt BigInt::operator>>(int amountBits) const
 	}
 	return res;
 }
-
-

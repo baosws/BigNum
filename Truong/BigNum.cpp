@@ -6,7 +6,7 @@ BigNum::BigNum() {
 
 BigNum::BigNum(const bool* numbers) {
 	//init data=00000..00;
-	//the position will be marked from left to right correlate 0 -> 128
+	//the position will be marked from left to right correlate 0 -> 127
 	data[0] = 0; data[1] = 0;
 	for (int i = 0; i < LENGTH_OF_BITS; ++i) {
 		set_bit(i, numbers[i]);

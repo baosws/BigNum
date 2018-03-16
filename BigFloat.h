@@ -3,7 +3,7 @@
 
 class BigFloat: public BigNum {
 public:
-    BigFloat(const string&);
+	BigFloat(const string&);
     BigFloat(const bool* const);
     BigFloat(const BigFloat&);
     BigFloat(double);

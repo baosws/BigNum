@@ -37,8 +37,10 @@ BigInt BigInt::operator^(const BigInt& other) const {
 	return result;
 }
 
+
 BigInt& BigInt::operator=(const BigInt& other) {
 	BigNum::operator=(other);
+	return *this;
 }
 
 bool BigInt::operator==(const BigInt& other) const {
