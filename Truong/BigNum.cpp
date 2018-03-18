@@ -16,28 +16,26 @@ BigNum::BigNum(const bool* numbers) {
 
 void BigNum::set_bit(int index, bool value) {
 	//(LENGTH_OF_BITS >> 1) = 128/2 =64
-	if (index < (LENGTH_OF_BITS >> 1)) {
-		//print decimal to binary with 64data //test
-		//std::string binary = dataet<64>(data[0]).to_string(); cout << binary << endl; 
-		if (value == 1) {
-			data[0] |= (1ll << ((LENGTH_OF_BITS >> 1) - 1 - index));
-		}
-		else {
-			data[0] &= ~(1ll << ((LENGTH_OF_BITS >> 1) - 1 - index));
-		}
+	//print decimal to binary with 64data //test
+	//std::string binary = dataet<64>(data[0]).to_string(); cout << binary << endl;
+
+	/*
+	(LENGTH_OF_BITS >> (index >> 6)
+	(index >> 6) = index/64 = {1,2}
+	(LENGTH_OF_BITS >> (index >> 6) = LENGTH_OF_BITS / {1,2} = 64
+	(index <64)  = LENGTH_OF_BITS>> 0 = 64
+	(index >=65)  = LENGTH_OF_BITS>> 1 = 64	
+	*/
+	if (value == 1) {
+		data[index >> 6] |= (1ll << ((LENGTH_OF_BITS >> (index >> 6)) - 1 - index));
 	}
 	else {
-		if (value == 1) {
-			data[1] |= (1ll << (LENGTH_OF_BITS - 1 - index));
-		}
-		else {
-			data[1] &= ~(1ll << (LENGTH_OF_BITS - 1 - index));
-		}
+		data[index >> 6] &= ~(1ll << ((LENGTH_OF_BITS >> (index >> 6)) - 1 - index));
 	}
 }
 
 bool BigNum::get_bit(int index) const {
-	return (index < (LENGTH_OF_BITS >> 1)) ? (data[0] >> ((LENGTH_OF_BITS >> 1) - 1 - index)) & 1 : (data[1] >> (LENGTH_OF_BITS - 1 - index)) & 1;
+	return data[index >> 6] >> ((LENGTH_OF_BITS >> (index >> 6)) - 1 - index) & 1;
 }
 
 BigNum& BigNum::operator=(const BigNum & big_num)
