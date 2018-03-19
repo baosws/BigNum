@@ -17,7 +17,7 @@ BigInt::BigInt(const BigInt& bgNum) : BigNum(bgNum) {}
 BigInt::BigInt(long long llNum)
 {
 	this->data[0] = llNum;
-	this->data[1] = 0;
+	this->data[1] = -(llNum < 0);
 }
 
 BigInt::BigInt(int num): BigInt((long long) num) {}

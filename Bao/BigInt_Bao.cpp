@@ -1,7 +1,5 @@
 #include "../includes.h"
 
-BigInt::BigInt(): BigNum() {}
-
 BigInt BigInt::operator!() const {
 	BigInt result;
 	result.data[0] = !(this->data[0] || this->data[1]);
@@ -53,4 +51,17 @@ bool BigInt::operator!=(const BigInt& other) const {
 
 BigInt::operator bool() const {
 	return this->data[0] != 0 || this->data[1] != 0;
+}
+
+BigInt::operator bool*() const {
+	bool* res = new bool[LENGTH_OF_BITS];
+	for (int i = 0; i < LENGTH_OF_BITS; ++i)
+		res[i] = this->get_bit(i);
+	return res;
+}
+
+ostream& operator<<(ostream& os, const BigInt& p) {
+	for (int i = LENGTH_OF_BITS - 1; i >= 0; --i)
+		os << (int)p.get_bit(i);
+	return os;
 }

@@ -45,4 +45,5 @@ public:
 
     operator bool() const;
     operator bool*() const;
+	friend ostream& operator<<(ostream&, const BigInt&);
 };

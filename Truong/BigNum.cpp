@@ -27,15 +27,18 @@ void BigNum::set_bit(int index, bool value) {
 	(index >=65)  = LENGTH_OF_BITS>> 1 = 64	
 	*/
 	if (value == 1) {
-		data[index >> 6] |= (1ll << ((LENGTH_OF_BITS >> (index >> 6)) - 1 - index));
+// 		data[index >> 6] |= (1ll << ((LENGTH_OF_BITS >> (index >> 6)) - 1 - index));
+		data[index >> 6] |= 1ll << (index & 63);
 	}
 	else {
-		data[index >> 6] &= ~(1ll << ((LENGTH_OF_BITS >> (index >> 6)) - 1 - index));
+// 		data[index >> 6] &= ~(1ll << ((LENGTH_OF_BITS >> (index >> 6)) - 1 - index));
+		data[index >> 6] &= ~(1ll << (index & 63));
 	}
 }
 
 bool BigNum::get_bit(int index) const {
-	return data[index >> 6] >> ((LENGTH_OF_BITS >> (index >> 6)) - 1 - index) & 1;
+// 	return data[index >> 6] >> ((LENGTH_OF_BITS >> (index >> 6)) - 1 - index) & 1;
+	return (data[index >> 6] >> (index & 63)) & 1;
 }
 
 BigNum& BigNum::operator=(const BigNum & big_num)
