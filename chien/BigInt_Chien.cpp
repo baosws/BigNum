@@ -1,14 +1,13 @@
 #include "../includes.h"
 
-//BigInt::BigInt(const string& decStr)
-//{
-// 	string binStr = decStrToBinStr(decStr);//hoặc là bool*
-// 	for(int i = 0; i<128;i++)
-// 		if(binStr[i] == '0')
-// 			this->set_bit(i, 0);
-// 		else
-// 			this->set_bit(i, 1);
-//}
+BigInt::BigInt(const char* binStr)
+{
+	this->data[0] = 0;
+	this->data[1] = 0;
+	for(int i = 0;i < strlen(binStr);i++)
+ 		if(binStr[i] == '1')
+ 			this->set_bit(127-i, true);
+}
 
 BigInt::BigInt(const bool* const binArr): BigNum(binArr) {}
 
@@ -42,9 +41,9 @@ BigInt BigInt::operator*(const BigInt& Mutiplier) const
 				break;
 		}
 		Q_1 = Q.get_bit(0);
-		Q = Q << 1;
+		Q = Q >> 1;
 		Q.set_bit(127, A.get_bit(0));
-		A = A << 1;
+		A = A >> 1;
 		A.set_bit(127, A.get_bit(126));
 		
 		//Check overflow
@@ -64,9 +63,9 @@ BigInt BigInt::operator/(const BigInt& Divisor) const
 	for(int i = 0;i < 128; i++)
 	{
 		//shift: [A,Q] << 1
-		A = A << 1;
+		A = A >> 1;
 		A.set_bit(0, Q.get_bit(127));
-		Q = Q << 1;
+		Q = Q >> 1;
 		
 		A = A - Divisor;
 		//if(A < 0)
@@ -84,7 +83,7 @@ BigInt BigInt::operator/(const BigInt& Divisor) const
 }
 
 
-BigInt BigInt::operator<<(int amountBits) const
+BigInt BigInt::operator>>(int amountBits) const
 {
 	BigInt res(*this); //0000.1001 << 2 = 0010.0100
 		
@@ -93,34 +92,86 @@ BigInt BigInt::operator<<(int amountBits) const
 	else			//1001.0000 << 2 = 0010.0100 <=> 1001.0000 >> 2 (với 2 bit dau =0)
 		if(amountBits>0 && amountBits < 128)
 		{
-			for(int i = 127; i>= amountBits; i--)
-			{
-				res.set_bit(i, this->get_bit(i-amountBits));
-			}
+			bool signal = res.get_bit(127);
+
+			for(int i = 0; i < 128 - amountBits; i++)
+				res.set_bit(i, this->get_bit(i+amountBits));
+			
+			for (int i = 127; i >= 128 - amountBits; i--)
+				res.set_bit(i, signal);
 		}
 	return res;
 }
 
-BigInt BigInt::operator>>(int amountBits) const
+BigInt BigInt::operator<<(int amountBits) const
 {
 	BigInt res(*this); //0000.1001 << 2 = 0010.0100
-		
-	if(amountBits >= 128)
+
+	if (amountBits >= 128)
 	{
-		if(res.get_bit(127)==0)
+		if (res.get_bit(127) == 0)
 			res = 0;
 		else
 			res = -1;
-	}	
+	}
 	else			//1001.0000 << 2 = 0010.0100 <=> 1001.0000 >> 2 (với 2 bit dau =0)
 	{
-		if(amountBits > 0)
+		if (amountBits > 0)
 		{
-			for(int i = 0; i + amountBits < 128; i++)
-			{
-				res.set_bit(i, this->get_bit(i+amountBits));
-			}
+			for (int i = 127; i >= amountBits; i--)
+				res.set_bit(i, this->get_bit(i - amountBits));
+
+			for (int i = amountBits-1; i>=0; i--)
+				res.set_bit(i, false);
+
 		}
 	}
 	return res;
+}
+bool BigInt::operator < (const BigInt &another) const 
+{
+	int sub = this->get_bit(127) - another.get_bit(127);
+	
+	switch (sub)
+	{
+	case 1:				//*this < 0 && another > 0
+		return true;
+	
+	case -1:			//*this > 0 && another < 0 
+		return false;
+	
+	default:
+		if (this->operator==(another))
+			return false;
+
+		for (int i = 126; i >= 0; i--)
+			if (this->get_bit(i) > another.get_bit(i))
+				return false;
+		
+	}
+	return true;
+}
+
+bool BigInt::operator > (const BigInt &another) const
+{
+	int sub = this->get_bit(127) - another.get_bit(127);
+
+	switch (sub)
+	{
+	case 1:				//*this < 0 && another > 0
+		return false;
+
+	case -1:			//*this > 0 && another < 0 
+		return true;
+
+	default:
+		if (this->operator==(another))
+			return false;
+
+		for (int i = 126; i >= 0; i--)
+		if (this->get_bit(i) < another.get_bit(i))
+			return false;
+
+	}
+	return true;
 }
