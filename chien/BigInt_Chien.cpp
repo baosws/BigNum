@@ -16,7 +16,7 @@ BigInt::BigInt(const BigInt& bgNum) : BigNum(bgNum) {}
 BigInt::BigInt(long long llNum)
 {
 	this->data[0] = llNum;
-	this->data[1] = 0;
+	this->data[1] = -(llNum < 0);
 }
 
 BigInt::BigInt(int num): BigInt((long long) num) {}
@@ -44,12 +44,11 @@ BigInt BigInt::operator*(const BigInt& Mutiplier) const
 		Q = Q >> 1;
 		Q.set_bit(127, A.get_bit(0));
 		A = A >> 1;
-		A.set_bit(127, A.get_bit(126));
-		
-		//Check overflow
-		if(A != BigInt(0)) { // overflow
-			// insert exception handling here
-		}
+		//A.set_bit(127, A.get_bit(126));	
+	}
+	//Check overflow
+	if (A != BigInt(0)) { // overflow
+		// insert exception handling here
 	}
 	return Q;
 }
