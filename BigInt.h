@@ -4,7 +4,7 @@
 class BigInt: public BigNum {
 public:
 	BigInt();
-   // BigInt(const string&);
+    BigInt(const char* binString);
     BigInt(const bool* const);
     BigInt(const BigInt&);
     BigInt(long long);
