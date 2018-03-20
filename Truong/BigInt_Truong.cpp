@@ -28,7 +28,7 @@ BigInt BigInt::operator-(const BigInt & num) const {
 	bool borrow = 0;
 	for (int i = 0; i < LENGTH_OF_BITS; ++i) {
 		result.set_bit(i, (this->get_bit(i) ^ num.get_bit(i)) ^ borrow);
-		borrow = (~this->get_bit(i)) & num.get_bit(i);
+		borrow = ((~this->get_bit(i)) & num.get_bit(i)) | (borrow & (~this->get_bit(i)));
 	}
 	return result;
 }

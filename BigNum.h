@@ -6,7 +6,7 @@ protected:
     long long data[2];
     BigNum();
     BigNum(const bool* const);
-
+public:
     void set_bit(int, bool);
     bool get_bit(int) const;
 
