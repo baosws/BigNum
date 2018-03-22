@@ -62,9 +62,9 @@ BigInt BigInt::operator/(const BigInt& Divisor) const
 	for(int i = 0;i < 128; i++)
 	{
 		//shift: [A,Q] << 1
-		A = A >> 1;
+		A = A << 1;
 		A.set_bit(0, Q.get_bit(127));
-		Q = Q >> 1;
+		Q = Q << 1;
 		
 		A = A - Divisor;
 		//if(A < 0)
@@ -76,8 +76,10 @@ BigInt BigInt::operator/(const BigInt& Divisor) const
 			A = A + Divisor;
 		}
 	}
+	cout << Q<<endl;
 	if(flag == true)
-		Q = 0-Q;
+		Q = BigInt(0)-Q;
+	cout << Q << endl;
 	return Q;
 }
 
