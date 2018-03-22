@@ -63,9 +63,9 @@ BigInt BigInt::operator/(const BigInt& Divisor) const
 	BigInt A(0);
 	BigInt M(Divisor);
 	BigInt Q(*this); //Q = Dividend
-	if (M.get_bit(127) == 1)
+	if (M < (BigInt)0)
 		M = -M;
-	if (Q.get_bit(127) == 1)
+	if (Q < (BigInt)0)
 		Q = -Q;
 	for(int i = 0; i < 128; i++)
 	{
@@ -73,7 +73,6 @@ BigInt BigInt::operator/(const BigInt& Divisor) const
 		A.set_bit(0, Q.get_bit(127));
 		Q = Q << 1;
 		A = A - M;
-		//if(A < 0)
 		if(A.get_bit(127) == 0) //(A >=0)?
 			Q.set_bit(0, 1);		
 		else
@@ -90,14 +89,14 @@ BigInt BigInt::operator/(const BigInt& Divisor) const
 
 BigInt BigInt::operator%(const BigInt& Divisor) const
 {
-	bool neg = this->get_bit(127) == 1;
+	bool neg = (this->get_bit(127) != Divisor.get_bit(127));
 
 	BigInt A(0);
 	BigInt M(Divisor);
 	BigInt Q(*this); //Q = Dividend
-	if (M.get_bit(127) == 1)
+	if (M < (BigInt)0)
 		M = -M;
-	if (Q.get_bit(127) == 1)
+	if (Q < (BigInt)0)
 		Q = -Q;
 	for(int i = 0; i < 128; i++)
 	{
@@ -105,7 +104,6 @@ BigInt BigInt::operator%(const BigInt& Divisor) const
 		A.set_bit(0, Q.get_bit(127));
 		Q = Q << 1;
 		A = A - M;
-		//if(A < 0)
 		if(A.get_bit(127) == 0) //(A >=0)?
 			Q.set_bit(0, 1);		
 		else
@@ -114,8 +112,9 @@ BigInt BigInt::operator%(const BigInt& Divisor) const
 			A = A + M;
 		}
 	}
-	if (neg)
+	if(neg == true) {
 		A = -A;
+	}
 	return A;
 }
 

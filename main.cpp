@@ -1,18 +1,29 @@
 #include "includes.h"
 #include "helper.h"
 
+void test() {
+	freopen("testcases/test.in", "r", stdin);
+	freopen("testcases/test.out", "w", stdout);
+	int T;
+	cin >> T;
+	for (int tc = 0; tc < T; ++tc) {
+		string sa, sb;
+		cin >> sa >> sb;
+		BigInt a = BigInt::from_dec_str(sa);
+		BigInt b = BigInt::from_dec_str(sb);
+		cout << a + b << " "
+			 << a - b << " "
+			 << a * b << " "
+			 << a / b << " "
+			 << a % b << endl;
+	}
+}
+
 int main() {
-	string sa, sb;
-// 	cin >> sa >> sb;
-	BigInt a = 3457234; // BigInt::from_dec_str(sa.c_str());
-	BigInt b = -935487363634564357ll; // BigInt::from_dec_str(sb.c_str());
-	tell(a);
-	tell(b);
-	tell(a+b);
-	tell(a-b);
-	tell(a*b);
-	tell(a/b);
-	tell(a%b);
-	(a % b).to_bits(cout << endl);
-// 	(a%b).print_bits(cout);
+// 	BigInt a = 7;
+// 	BigInt b = -5;
+// 	cout << a << endl;
+// 	cout << b << endl;
+// 	cout << a / b << endl;
+	test();
 }

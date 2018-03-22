@@ -20,14 +20,17 @@ BigInt BigInt::from_dec_str(string dec_str) {
 		res = -res;
 	return res;
 }
+
 ostream& BigInt::to_bits(ostream& os) {
 	for (int i = __LENGTH_OF_BITS - 1; i >= 0; --i)
 		os << this->get_bit(i);
 	return os;
 }
+
 BigInt BigInt::operator-() const {
 	return BigInt(0) - *this;
 }
+
 BigInt BigInt::operator!() const {
 	BigInt result;
 	result.data[0] = !(this->data[0] || this->data[1]);
@@ -95,7 +98,7 @@ BigInt::operator long long() const {
 ostream& operator<<(ostream& os, const BigInt& num) {
 	if (num.get_bit(127) == 1)
 		return os << '-' << -num;
-	const BigInt d(100000000000000ll);
+	const BigInt d(10000000000000ll);
 	BigInt p(num);
 	long long a[3];
 	a[0] = p % d;
