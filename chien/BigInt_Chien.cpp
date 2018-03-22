@@ -68,10 +68,9 @@ BigInt BigInt::operator/(const BigInt& Divisor) const
 		A.set_bit(0, Q.get_bit(127));
 		Q = Q << 1;
 		A = A - M;
-
-		if(A.get_bit(127) == 0) {//(A >=0)?
+		//if(A < 0)
+		if(A.get_bit(127) == 0) //(A >=0)?
 			Q.set_bit(0, 1);		
-		}
 		else
 		{
 			Q.set_bit(0, 0);
