@@ -1,12 +1,12 @@
 #include "../includes.h"
 BigInt::BigInt() : BigNum() {}
 
-// bool BigInt::operator<=(const BigInt& other) const {
-// 	return !(*this > other);
-// }
-// bool BigInt::operator>=(const BigInt& other) const {
-// 	return !(*this < other);
-// }
+bool BigInt::operator<=(const BigInt& other) const {
+	return !(*this > other);
+}
+bool BigInt::operator>=(const BigInt& other) const {
+	return !(*this < other);
+}
 
 //reference at: https://www.geeksforgeeks.org/add-two-bit-strings/
 BigInt BigInt::operator+(const BigInt & num) const {

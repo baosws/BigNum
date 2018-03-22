@@ -1,5 +1,30 @@
 #include "../includes.h"
 
+BigInt BigInt::from_dec_str(string dec_str) {
+	bool neg = false;
+	if (dec_str[0] == '-') {
+		neg = true;
+		dec_str.erase(0, 1);
+	}
+	while (dec_str.length() < MAX_DEC_LENGTH)
+		dec_str = '0' + dec_str;
+	long long a[3] = {0};
+	for (int i = 0; i < MAX_DEC_LENGTH; ++i) {
+		a[i / 13] = a[i / 13] * 10 + dec_str[i] - '0';
+	}
+	BigInt res;
+	const BigInt d(10000000000000ll);
+	for (int i = 0; i < 3; ++i)
+		res = res * d + BigInt(a[i]);
+	if (neg)
+		res = -res;
+	return res;
+}
+ostream& BigInt::to_bits(ostream& os) {
+	for (int i = __LENGTH_OF_BITS - 1; i >= 0; --i)
+		os << this->get_bit(i);
+	return os;
+}
 BigInt BigInt::operator-() const {
 	return BigInt(0) - *this;
 }
@@ -68,26 +93,23 @@ BigInt::operator long long() const {
 }
 
 ostream& operator<<(ostream& os, const BigInt& num) {
-// 	for (int i = __LENGTH_OF_BITS - 1; i >= 0; --i)
-// 		os << num.get_bit(i);
-// 	return os;
 	if (num.get_bit(127) == 1)
 		return os << '-' << -num;
 	const BigInt d(100000000000000ll);
 	BigInt p(num);
-	long long c = p % d;
+	long long a[3];
+	a[0] = p % d;
 	p = p / d;
-	long long b = p % d;
-	long long a = p / d;
-	if (a)
-		os << a << b << c;	
-	else {
-		if (b)
-			os << b << c;
-		else
-			os << c;
+	a[1] = p % d;
+	a[2] = p / d;
+	string s;
+	for (int i = 0; i < MAX_DEC_LENGTH; ++i) {
+		s = char(a[i / 13] % 10 + '0') + s;
+		a[i / 13] /= 10;
 	}
-	return os;
+	while (s.length() > 1 && s[0] == '0')
+		s.erase(0, 1);
+	return os << s;
 }
 
 istream& operator>>(istream& is, BigInt& p) {

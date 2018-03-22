@@ -9,3 +9,4 @@ using namespace std;
 //#include "BigFloat.h"
 
 const int __LENGTH_OF_BITS = 128;
+const int MAX_DEC_LENGTH = 39;
