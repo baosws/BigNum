@@ -1,5 +1,8 @@
 #include "../includes.h"
 
+BigInt BigInt::operator-() const {
+	return BigInt(0) - *this;
+}
 BigInt BigInt::operator!() const {
 	BigInt result;
 	result.data[0] = !(this->data[0] || this->data[1]);
@@ -54,14 +57,42 @@ BigInt::operator bool() const {
 }
 
 BigInt::operator bool*() const {
-	bool* res = new bool[LENGTH_OF_BITS];
-	for (int i = 0; i < LENGTH_OF_BITS; ++i)
+	bool* res = new bool[__LENGTH_OF_BITS];
+	for (int i = 0; i < __LENGTH_OF_BITS; ++i)
 		res[i] = this->get_bit(i);
 	return res;
 }
 
-ostream& operator<<(ostream& os, const BigInt& p) {
-	for (int i = LENGTH_OF_BITS - 1; i >= 0; --i)
-		os << (int)p.get_bit(i);
+BigInt::operator long long() const {
+	return this->data[0];
+}
+
+ostream& operator<<(ostream& os, const BigInt& num) {
+// 	for (int i = __LENGTH_OF_BITS - 1; i >= 0; --i)
+// 		os << num.get_bit(i);
+// 	return os;
+	if (num.get_bit(127) == 1)
+		return os << '-' << -num;
+	const BigInt d(100000000000000ll);
+	BigInt p(num);
+	long long c = p % d;
+	p = p / d;
+	long long b = p % d;
+	long long a = p / d;
+	if (a)
+		os << a << b << c;	
+	else {
+		if (b)
+			os << b << c;
+		else
+			os << c;
+	}
 	return os;
+}
+
+istream& operator>>(istream& is, BigInt& p) {
+	string s;
+	is >> s;
+	p = BigInt(s.c_str());
+	return is;
 }

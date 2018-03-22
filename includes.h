@@ -1,11 +1,11 @@
 #pragma once
 
-using namespace std;
-#include <string>
+#include <cstring>
 #include <iostream>
+using namespace std;
 #include "BigNum.h"
 //#include "BigDec.h"
 #include "BigInt.h"
 //#include "BigFloat.h"
 
-const int LENGTH_OF_BITS = 128;
+const int __LENGTH_OF_BITS = 128;

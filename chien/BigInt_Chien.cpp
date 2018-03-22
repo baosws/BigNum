@@ -4,7 +4,7 @@ BigInt::BigInt(const char* binStr)
 {
 	this->data[0] = 0;
 	this->data[1] = 0;
-	for(int i = 0;i < strlen(binStr);i++)
+	for(int i = 0;i < (int)strlen(binStr);i++)
  		if(binStr[i] == '1')
  			this->set_bit(127-i, true);
 }
@@ -28,7 +28,7 @@ BigInt BigInt::operator*(const BigInt& Mutiplier) const
 	BigInt Q(Mutiplier);
 	bool	Q_1 = 0;
 	
-	for(int i = 0; i < LENGTH_OF_BITS; i++)
+	for(int i = 0; i < __LENGTH_OF_BITS; i++)
 	{
 		switch(Q.get_bit(0) - Q_1)
 		{
@@ -55,32 +55,62 @@ BigInt BigInt::operator*(const BigInt& Mutiplier) const
 
 BigInt BigInt::operator/(const BigInt& Divisor) const
 {
-	bool flag = this->get_bit(127) != Divisor.get_bit(127);
+	bool neg = (this->get_bit(127) != Divisor.get_bit(127));
 
 	BigInt A(0);
+	BigInt M(Divisor);
+	if (neg)
+		M = -M;
 	BigInt Q(*this); //Q = Dividend
-	for(int i = 0;i < 128; i++)
+	for(int i = 0; i < 128; i++)
 	{
-		//shift: [A,Q] << 1
-		A = A >> 1;
+		A = A << 1;
 		A.set_bit(0, Q.get_bit(127));
-		Q = Q >> 1;
-		
-		A = A - Divisor;
-		//if(A < 0)
-		if(A.get_bit(127) == 0) //(A >=0)?
+		Q = Q << 1;
+		A = A - M;
+
+		if(A.get_bit(127) == 0) {//(A >=0)?
 			Q.set_bit(0, 1);		
+		}
 		else
 		{
 			Q.set_bit(0, 0);
-			A = A + Divisor;
+			A = A + M;
 		}
 	}
-	if(flag == true)
-		Q = 0-Q;
+	if(neg == true) {
+		Q = -Q;
+	}
 	return Q;
 }
 
+BigInt BigInt::operator%(const BigInt& Divisor) const
+{
+	bool neg = (this->get_bit(127) != Divisor.get_bit(127));
+
+	BigInt A(0);
+	BigInt M(Divisor);
+	if (neg)
+		M = -M;
+	BigInt Q(*this); //Q = Dividend
+	for(int i = 0; i < 128; i++)
+	{
+		A = A << 1;
+		A.set_bit(0, Q.get_bit(127));
+		Q = Q << 1;
+		A = A - M;
+
+		if(A.get_bit(127) == 0) {//(A >=0)?
+			Q.set_bit(0, 1);		
+		}
+		else
+		{
+			Q.set_bit(0, 0);
+			A = A + M;
+		}
+	}
+	return A;
+}
 
 BigInt BigInt::operator>>(int amountBits) const
 {

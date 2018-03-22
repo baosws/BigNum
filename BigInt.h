@@ -15,6 +15,7 @@ public:
     BigInt operator-(const BigInt&) const;
     BigInt operator*(const BigInt&) const;
     BigInt operator/(const BigInt&) const;
+	BigInt operator%(const BigInt&) const;
 
     BigInt& operator+=(const BigInt&);
     BigInt& operator-=(const BigInt&);
@@ -45,5 +46,8 @@ public:
 
     operator bool() const;
     operator bool*() const;
+	operator long long () const;
+	
 	friend ostream& operator<<(ostream&, const BigInt&);
+	friend istream& operator>>(istream&, BigInt&);
 };
