@@ -1,12 +1,12 @@
 #include "../includes.h"
 BigInt::BigInt() : BigNum() {}
 
-// bool BigInt::operator<=(const BigInt& other) const {
-// 	return !(*this > other);
-// }
-// bool BigInt::operator>=(const BigInt& other) const {
-// 	return !(*this < other);
-// }
+bool BigInt::operator<=(const BigInt& other) const {
+	return !(*this > other);
+}
+bool BigInt::operator>=(const BigInt& other) const {
+	return !(*this < other);
+}
 
 //reference at: https://www.geeksforgeeks.org/add-two-bit-strings/
 BigInt BigInt::operator+(const BigInt & num) const {
@@ -15,9 +15,9 @@ BigInt BigInt::operator+(const BigInt & num) const {
 	 */
 	BigInt result;
 	bool carry = 0;
-	for (int i = 0; i < LENGTH_OF_BITS; ++i) {
+	for (int i = 0; i < __LENGTH_OF_BITS; ++i) {
 		result.set_bit(i, (this->get_bit(i) ^ num.get_bit(i)) ^ carry);
-		carry = (this->get_bit(i) & num.get_bit(i) | (this->get_bit(i) & carry)) | (carry & num.get_bit(i));
+		carry = (this->get_bit(i) & num.get_bit(i)) | (this->get_bit(i) & carry) | (carry & num.get_bit(i));
 	}
 	return result;
 }
@@ -26,9 +26,10 @@ BigInt BigInt::operator+(const BigInt & num) const {
 BigInt BigInt::operator-(const BigInt & num) const {
 	BigInt result;
 	bool borrow = 0;
-	for (int i = 0; i < LENGTH_OF_BITS; ++i) {
-		result.set_bit(i, (this->get_bit(i) ^ num.get_bit(i)) ^ borrow);
-		borrow = ((~this->get_bit(i)) & num.get_bit(i)) | (borrow & (~this->get_bit(i)));
+	for (int i = 0; i < __LENGTH_OF_BITS; ++i) {
+		int c = this->get_bit(i) - num.get_bit(i) - borrow;
+		result.set_bit(i, c & 1);
+		borrow = c < 0;
 	}
 	return result;
 }
