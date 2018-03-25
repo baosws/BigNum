@@ -1,53 +1,73 @@
 #include "../includes.h"
-unsigned short get_exponent(const BigFloat&num)
+unsigned short BigFloat::get_exponent()
 {
 	//set 15 exponet bits into unsigned short
-	return unsigned short(0);
+	unsigned short res = 0;
+	return res;
 }
+
 void BigFloat::set_exponent(unsigned short exp)
 {
 	//set first 15 bits of exp to exponent area
 }
-BigInt BigFloat::get_significand()
+bool BigFloat::is_exponent_overflow(){ return true; }
+bool BigFloat::is_exponent_underflow(){ return true; }
+
+bool BigFloat::is_significand_overflow(){ return true; }
+
+bool BigFloat::is_normalized(){ return true; }
+
+
+
+
+BigInt BigFloat::get_significand() const
 {
-	//return 23bits of significand area
-	return BigInt(0);
+	BigInt res(0);
+	for (int i = 0; i <= 111; i++)
+		res.set_bit(i, this->get_bit(111-i));
+	return res;
 }
 void BigFloat::set_significand(const BigInt& biNum)
 {
-
+	for (int i = 0; i <= 111; i++)
+		this->set_bit(i, biNum.get_bit(111-i));
 }
-void BigFloat::shift_significand_right(int)
+void BigFloat::shift_significand_right()
 {
-
+	for (int i = 111; i > 0; i--)
+		this->set_bit(i, this->get_bit(i - 1));
+	this->set_bit(0, false);
 }
-void BigFloat::shift_significand_left(int)
+void BigFloat::shift_significand_left()
 {
-
+	for (int i = 0; i <= 110; i++)
+		this->set_bit(i, this->get_bit(i + 1));
+	this->set_bit(111, false);
 }
-bool BigFloat::is_exponent_overflow()
-{
-	return true;
-}
-bool BigFloat::is_exponent_underflow()
-{
-	return true;
-}
-bool BigFloat::is_significand_overflow()
-{
-	return true;
-}
-bool BigFloat::is_normalized()
-{
-	return true;
-}
+//bool BigFloat::is_exponent_overflow()
+//{
+//	return true;
+//}
+//bool BigFloat::is_exponent_underflow()
+//{
+//	return true;
+//}
+//bool BigFloat::is_significand_overflow()
+//{
+//	return true;
+//}
+//bool BigFloat::is_normalized()
+//{
+//	return true;
+//}
 //-----------
+
 BigFloat BigFloat::operator+(const BigFloat& another) const
 {
-	if (*this == BigFloat(0.0))
+	if (*this == new BigFloat(0.0)) // just temporary solution when have not had oper== yet.
 		return BigFloat(another);
 	else 
-	if (another == BigFloat(0.0))
+	if (&another == new BigFloat(0.0)) // just temporary solution when have not had oper== yet.
 		return BigFloat(*this);
 	//res = X + Y
 	BigFloat Y(another), X(*this);
@@ -64,7 +84,7 @@ BigFloat BigFloat::operator+(const BigFloat& another) const
 			{
 				X_exponent++;
 				X.set_exponent(X_exponent);
-				X.shift_significand_right(1); //logical shift
+				X.shift_significand_right(); //logical shift
 				if (X.get_significand() == BigInt(0))
 					return Y;
 			}
@@ -72,23 +92,23 @@ BigFloat BigFloat::operator+(const BigFloat& another) const
 			{
 				Y_exponent++;
 				Y.set_exponent(Y_exponent);
-				Y.shift_significand_right(1);
+				Y.shift_significand_right();
 				if (Y.get_significand() == BigInt(0))
 					return X;
 			}
 		}
 	} while (X_exponent != Y_exponent);
 
-	BigFloat res(0.0);
-	res.set_significand(X.get_significand() + Y.get_significand());
+	BigFloat res;
 	
+	res.add_signed_significands(X, Y);
+
 	if (res.get_significand() == BigInt(0))
 		return res;//res=0
 	
 	if (res.is_significand_overflow())
 	{
-		res.shift_significand_right(1);
-		X_exponent = res.get_exponent();
+		res.shift_significand_right();
 		X_exponent++;
 		res.set_exponent(X_exponent);
 		if (res.is_exponent_overflow())
@@ -98,7 +118,7 @@ BigFloat BigFloat::operator+(const BigFloat& another) const
 	
 	while (!res.is_normalized())
 	{
-		res.shift_significand_left(1);
+		res.shift_significand_left();
 		X_exponent = res.get_exponent();
 		X_exponent--;
 		res.set_exponent(X_exponent);
@@ -106,7 +126,29 @@ BigFloat BigFloat::operator+(const BigFloat& another) const
 			throw new exception("Exponent underflow!!!");
 	}
 	//res = res.round();
-	return res;
+	return res;		
+}
 
-		
+void BigFloat::add_signed_significands(const BigFloat&X, const BigFloat&Y)
+{
+	//Add signed significands
+	BigInt X_significand = X.get_significand();
+	BigInt Y_significand = Y.get_significand();
+
+	if (X.get_bit(127) == 1)
+		X_significand = BigInt(0) - X_significand;
+
+	if (Y.get_bit(127) == 1)
+		Y_significand = BigInt(0) - Y_significand;
+
+	BigInt Added_Significands = X_significand + Y_significand;
+
+	this->set_bit(127, Added_Significands.get_bit(127));
+
+	//change res's significand if it was negative
+	if (Added_Significands.get_bit(127) == 1)//negative
+		Added_Significands = BigInt(0) - Added_Significands; //
+
+	this->set_significand(Added_Significands);//just set last 112 bit
+
 }
