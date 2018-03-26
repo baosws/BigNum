@@ -21,6 +21,26 @@ BigInt BigInt::from_dec_str(string dec_str) {
 	return res;
 }
 
+string BigInt::to_dec() const {
+	if (this->get_bit(127) == 1)
+		return "-" + (-*this).to_dec();
+	const BigInt d(10000000000000ll);
+	BigInt p(*this);
+	long long a[3];
+	a[0] = p % d;
+	p = p / d;
+	a[1] = p % d;
+	a[2] = p / d;
+	string res;
+	for (int i = 0; i < MAX_DEC_LENGTH; ++i) {
+		res = char(a[i / 13] % 10 + '0') + res;
+		a[i / 13] /= 10;
+	}
+	while (res.length() > 1 && res[0] == '0')
+		res.erase(0, 1);
+	return res;
+}
+
 string BigInt::to_bin() const {
 	string res = "";
 	for (int i = 0; i < __LENGTH_OF_BITS; ++i)
@@ -79,7 +99,6 @@ BigInt BigInt::operator^(const BigInt& other) const {
 	return result;
 }
 
-
 BigInt& BigInt::operator=(const BigInt& other) {
 	BigNum::operator=(other);
 	return *this;
@@ -108,24 +127,9 @@ BigInt::operator long long() const {
 	return this->data[0];
 }
 
-ostream& operator<<(ostream& os, const BigInt& num) {
-	if (num.get_bit(127) == 1)
-		return os << '-' << -num;
-	const BigInt d(10000000000000ll);
-	BigInt p(num);
-	long long a[3];
-	a[0] = p % d;
-	p = p / d;
-	a[1] = p % d;
-	a[2] = p / d;
-	string s;
-	for (int i = 0; i < MAX_DEC_LENGTH; ++i) {
-		s = char(a[i / 13] % 10 + '0') + s;
-		a[i / 13] /= 10;
-	}
-	while (s.length() > 1 && s[0] == '0')
-		s.erase(0, 1);
-	return os << s;
+ostream& operator<<(ostream& os, const BigInt& p) {
+	os << p.to_bin();
+	return os;
 }
 
 istream& operator>>(istream& is, BigInt& p) {

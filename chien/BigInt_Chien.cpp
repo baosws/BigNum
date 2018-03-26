@@ -5,6 +5,8 @@ BigInt::BigInt(string binStr)
 	this->data[0] = 0;
 	this->data[1] = 0;
 	bool neg = binStr[0] == '-';
+	if (neg)
+		binStr.erase(0, 1);
 	int n = binStr.length();
 	for (int i = 0; i < n; ++i)
 		this->set_bit(n - 1 - i, binStr[i] == '1');
@@ -58,6 +60,8 @@ BigInt BigInt::operator*(const BigInt& Mutiplier) const
 
 BigInt BigInt::operator/(const BigInt& Divisor) const
 {
+	if (Divisor == (BigInt)0)
+		throw "ERROR: Divided by zero!!!";
 	bool neg = (this->get_bit(127) != Divisor.get_bit(127));
 
 	BigInt A(0);
@@ -89,6 +93,8 @@ BigInt BigInt::operator/(const BigInt& Divisor) const
 
 BigInt BigInt::operator%(const BigInt& Divisor) const
 {
+	if (Divisor == (BigInt)0)
+		throw "ERROR: Divided by zero!!!";
 	bool neg = (this->get_bit(127) != Divisor.get_bit(127));
 
 	BigInt A(0);

@@ -12,6 +12,7 @@ public:
 
 	static BigInt from_dec_str(string);
 	string to_bin() const;
+	string to_dec() const;
 	string to_hex() const;
     
     BigInt operator+(const BigInt&) const;
@@ -21,12 +22,7 @@ public:
     BigInt operator/(const BigInt&) const;
 	BigInt operator%(const BigInt&) const;
 
-    BigInt& operator+=(const BigInt&);
-    BigInt& operator-=(const BigInt&);
-    BigInt& operator*=(const BigInt&);
-    BigInt& operator/=(const BigInt&);
-
-    BigInt operator~() const;
+	BigInt operator~() const;
     BigInt operator!() const;
     BigInt operator&(const BigInt&) const;
     BigInt operator|(const BigInt&) const;
@@ -35,12 +31,7 @@ public:
     BigInt operator>>(int) const;
     
     BigInt& operator=(const BigInt&);
-    BigInt& operator&=(const BigInt&);
-    BigInt& operator|=(const BigInt&);
-    BigInt& operator^=(const BigInt&);
-    BigInt& operator<<=(int);
-    BigInt& operator>>=(int);
-
+    
     bool operator==(const BigInt&) const;
     bool operator!=(const BigInt&) const;
     bool operator<(const BigInt&) const;
