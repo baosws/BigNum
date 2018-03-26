@@ -104,9 +104,6 @@ BigInt& BigInt::operator=(const BigInt& other) {
 	return *this;
 }
 
-bool BigInt::operator==(long long other) const {
-	return this->data[0] == 0 && this->data[1] == other;
-}
 
 bool BigInt::operator==(const BigInt& other) const {
 	return this->data[0] == other.data[0] && this->data[1] == other.data[1];
@@ -131,30 +128,11 @@ BigInt::operator long long() const {
 	return this->data[0];
 }
 
-<<<<<<< HEAD
-ostream& operator<<(ostream& os, const BigInt& num) {
-	if (num.get_bit(127) == 1)
-		return os << '-' << -num;
-	const BigInt d(10000000000000ll);
-	BigInt p(num);
-	long long a[3];
-	a[0] = p % d;
-	p = p / d;
-	a[1] = p % d;
-	a[2] = p / d;
-	string s;
-	for (int i = 0; i < MAX_DEC_LENGTH; ++i) {
-		s = char(a[i / 13] % 10 + '0') + s;
-		a[i / 13] /= 10;
-	}
-	while (s.length() > 1 && s[0] == '0')
-		s.erase(0, 1);
-	return os<< s;
-=======
 ostream& operator<<(ostream& os, const BigInt& p) {
-	os << p.to_bin();
+	//os << p.to_bin();
+	puts(p.to_bin().c_str());
 	return os;
->>>>>>> 584964a37a80fff5b83ebc7c023b27b4b5284ba4
+
 }
 
 istream& operator>>(istream& is, BigInt& p) {

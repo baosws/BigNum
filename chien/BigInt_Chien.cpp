@@ -218,24 +218,27 @@ bool BigInt::operator > (const BigInt &another) const
 	return true;
 }
 
-
-BigInt& BigInt::operator+=(const BigInt&another)
-{
-	*this = this->operator+(another);
-	return *this;
+bool BigInt::operator==(int other) const {
+	return this->data[0] == 0 && this->data[1] == long long(other);
 }
-BigInt& BigInt::operator-=(const BigInt&another)
-{
-	*this = this->operator-(another);
-	return *this;
-}
-BigInt& BigInt::operator*=(const BigInt&another)
-{
-	*this = this->operator*(another);
-	return *this;
-}
-BigInt& BigInt::operator/=(const BigInt&another)
-{
-	*this = this->operator/(another);
-	return *this;
-}
+//
+//BigInt& BigInt::operator+=(const BigInt&another)
+//{
+//	*this = this->operator+(another);
+//	return *this;
+//}
+//BigInt& BigInt::operator-=(const BigInt&another)
+//{
+//	*this = this->operator-(another);
+//	return *this;
+//}
+//BigInt& BigInt::operator*=(const BigInt&another)
+//{
+//	*this = this->operator*(another);
+//	return *this;
+//}
+//BigInt& BigInt::operator/=(const BigInt&another)
+//{
+//	*this = this->operator/(another);
+//	return *this;
+//}
