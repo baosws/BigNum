@@ -21,10 +21,23 @@ BigInt BigInt::from_dec_str(string dec_str) {
 	return res;
 }
 
-ostream& BigInt::to_bits(ostream& os) {
-	for (int i = __LENGTH_OF_BITS - 1; i >= 0; --i)
-		os << this->get_bit(i);
-	return os;
+string BigInt::to_bin() const {
+	string res = "";
+	for (int i = 0; i < __LENGTH_OF_BITS; ++i)
+		res = char(this->get_bit(i) + '0') + res;
+	return res;
+}
+
+string BigInt::to_hex() const {
+	string res = "";
+	for (int i = 0; i < __LENGTH_OF_BITS; i += 4) {
+		int c = (this->get_bit(i + 3) << 3)
+			  + (this->get_bit(i + 2) << 2)
+		  	  + (this->get_bit(i + 1) << 1)
+			  + this->get_bit(i);	  
+		res = char(c < 10 ? c + '0' : c - 10 + 'A') + res;
+	}
+	return res;
 }
 
 BigInt BigInt::operator-() const {

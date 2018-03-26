@@ -17,7 +17,7 @@ public:
 	unsigned short get_exponent();
 	void set_exponent(unsigned short exp);
 
-	BigInt get_significand();
+	BigInt get_significand() const;
 	void set_significand(const BigInt& biNum);
 	
 	void shift_significand_right(int);

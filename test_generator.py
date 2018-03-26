@@ -2,7 +2,7 @@ import random as rd
 R = 1 << 127
 MIN = -R
 MAX = R
-T = 200
+T = 1000
 def normalized(x, R):
     return (x + R) % (R << 1) - R
 def mod(a, b):
@@ -14,7 +14,9 @@ with open('testcases/test.in', 'w') as fin:
     with open('testcases/test.ans', 'w') as fout:
         print(T, file = fin)
         for i in range(T):
-            a = rd.randint(MIN, MAX)
-            b = rd.randint(MIN, MAX)
+            if i % 100 == 1:
+                R >>= 10
+            a = rd.randint(-R, R)
+            b = rd.randint(-R, R)
             print(a, b, file = fin)
-            print(normalized(a + b, R), normalized(a - b, R), normalized(a * b, R), normalized(div(a, b), R), normalized(mod(a, b), R), file = fout)
+            print(normalized(a + b, MAX), normalized(a - b, MAX), normalized(a * b, MAX), normalized(div(a, b), MAX), normalized(mod(a, b), MAX), file = fout)

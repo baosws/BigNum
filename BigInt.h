@@ -11,7 +11,8 @@ public:
 	BigInt(int);
 
 	static BigInt from_dec_str(string);
-	ostream& to_bits(ostream&);
+	string to_bin() const;
+	string to_hex() const;
     
     BigInt operator+(const BigInt&) const;
 	BigInt operator-() const;
