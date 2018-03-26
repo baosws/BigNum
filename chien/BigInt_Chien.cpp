@@ -155,6 +155,7 @@ BigInt BigInt::operator<<(int amountBits) const
 	}
 	return res;
 }
+
 bool BigInt::operator < (const BigInt &another) const 
 {
 	int sub = this->get_bit(127) - another.get_bit(127);
@@ -202,3 +203,28 @@ bool BigInt::operator > (const BigInt &another) const
 	}
 	return true;
 }
+
+bool BigInt::operator==(int other) const {
+	return this->data[0] == 0 && this->data[1] == long long(other);
+}
+//
+//BigInt& BigInt::operator+=(const BigInt&another)
+//{
+//	*this = this->operator+(another);
+//	return *this;
+//}
+//BigInt& BigInt::operator-=(const BigInt&another)
+//{
+//	*this = this->operator-(another);
+//	return *this;
+//}
+//BigInt& BigInt::operator*=(const BigInt&another)
+//{
+//	*this = this->operator*(another);
+//	return *this;
+//}
+//BigInt& BigInt::operator/=(const BigInt&another)
+//{
+//	*this = this->operator/(another);
+//	return *this;
+//}

@@ -32,7 +32,15 @@ public:
     BigInt operator>>(int) const;
     
     BigInt& operator=(const BigInt&);
-    
+
+    BigInt& operator&=(const BigInt&);
+    BigInt& operator|=(const BigInt&);
+    BigInt& operator^=(const BigInt&);
+    BigInt& operator<<=(int);
+    BigInt& operator>>=(int);
+
+	bool BigInt::operator==(int other) const;
+
     bool operator==(const BigInt&) const;
     bool operator!=(const BigInt&) const;
     bool operator<(const BigInt&) const;

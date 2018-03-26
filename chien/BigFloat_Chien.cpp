@@ -10,15 +10,10 @@ void BigFloat::set_exponent(unsigned short exp)
 {
 	//set first 15 bits of exp to exponent area
 }
-bool BigFloat::is_exponent_overflow(){ return true; }
-bool BigFloat::is_exponent_underflow(){ return true; }
-
-bool BigFloat::is_significand_overflow(){ return true; }
-
-bool BigFloat::is_normalized(){ return true; }
-
-
-
+bool BigFloat::is_exponent_overflow(){ return false; }
+bool BigFloat::is_exponent_underflow(){ return false; }
+bool BigFloat::is_significand_overflow(){ return false; }
+bool BigFloat::is_normalized(){ return false; }
 
 BigInt BigFloat::get_significand() const
 {
@@ -64,28 +59,28 @@ void BigFloat::shift_significand_left()
 
 BigFloat BigFloat::operator+(const BigFloat& another) const
 {
-	if (*this == new BigFloat(0.0)) // just temporary solution when have not had oper== yet.
+	if (*this == BigFloat(0.0))
 		return BigFloat(another);
 	else 
-	if (&another == new BigFloat(0.0)) // just temporary solution when have not had oper== yet.
+	if (another == BigFloat(0.0))
 		return BigFloat(*this);
-	//res = X + Y
+
 	BigFloat Y(another), X(*this);
 	unsigned short X_exponent, Y_exponent;
+	
+	//Balance two exponents
 	do
 	{
 		X_exponent = X.get_exponent();
 		Y_exponent = Y.get_exponent();
-		if (X_exponent == Y_exponent)
-			break;
-		else
+		if (X_exponent != Y_exponent)
 		{
 			if (X_exponent > Y_exponent)
 			{
 				X_exponent++;
 				X.set_exponent(X_exponent);
 				X.shift_significand_right(); //logical shift
-				if (X.get_significand() == BigInt(0))
+				if (X.get_significand() == 0)
 					return Y;
 			}
 			else
@@ -93,17 +88,17 @@ BigFloat BigFloat::operator+(const BigFloat& another) const
 				Y_exponent++;
 				Y.set_exponent(Y_exponent);
 				Y.shift_significand_right();
-				if (Y.get_significand() == BigInt(0))
+				if (Y.get_significand() == 0)
 					return X;
 			}
 		}
 	} while (X_exponent != Y_exponent);
 
+
 	BigFloat res;
-	
 	res.add_signed_significands(X, Y);
 
-	if (res.get_significand() == BigInt(0))
+	if (res.get_significand() == 0)
 		return res;//res=0
 	
 	if (res.is_significand_overflow())
@@ -129,6 +124,14 @@ BigFloat BigFloat::operator+(const BigFloat& another) const
 	return res;		
 }
 
+BigFloat BigFloat::operator-(const BigFloat& another) const
+{
+	BigFloat temp(another);
+	temp.set_bit(127, 1 - another.get_bit(127));
+	return this->operator+(temp);
+}
+
+
 void BigFloat::add_signed_significands(const BigFloat&X, const BigFloat&Y)
 {
 	//Add signed significands
@@ -147,7 +150,7 @@ void BigFloat::add_signed_significands(const BigFloat&X, const BigFloat&Y)
 
 	//change res's significand if it was negative
 	if (Added_Significands.get_bit(127) == 1)//negative
-		Added_Significands = BigInt(0) - Added_Significands; //
+		Added_Significands = BigInt(0) - Added_Significands; //significand is unsigned
 
 	this->set_significand(Added_Significands);//just set last 112 bit
 
