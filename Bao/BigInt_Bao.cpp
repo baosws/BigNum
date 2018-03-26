@@ -41,6 +41,22 @@ string BigInt::to_dec() const {
 	return res;
 }
 
+BigInt BigInt::from_bin_str(string binStr)
+{
+	BigInt res;
+	res.data[0] = 0;
+	res.data[1] = 0;
+	bool neg = binStr[0] == '-';
+	if (neg)
+		binStr.erase(0, 1);
+	int n = binStr.length();
+	for (int i = 0; i < n; ++i)
+		res.set_bit(n - 1 - i, binStr[i] == '1');
+	if (neg)
+		res = -res;
+	return res;
+}
+
 string BigInt::to_bin() const {
 	string res = "";
 	for (int i = 0; i < __LENGTH_OF_BITS; ++i)
@@ -57,6 +73,28 @@ string BigInt::to_hex() const {
 			  + this->get_bit(i);	  
 		res = char(c < 10 ? c + '0' : c - 10 + 'A') + res;
 	}
+	return res;
+}
+
+BigInt BigInt::from_hex_str(string hex_str) {
+	bool neg = false;
+	if (hex_str[0] == '-') {
+		neg = true;
+		hex_str.erase(0, 1);
+	}
+	while (hex_str.length() < MAX_HEX_LENGTH)
+		hex_str = '0' + hex_str;
+	BigInt res;
+	int n = hex_str.length();
+	for (int i = 0; i < n; ++i) {
+		int c = (hex_str[n - i - 1] >= 'A' ? hex_str[n - i - 1] - 'A' + 10 : hex_str[n - i - 1] - '0');
+		res.set_bit(i << 2, c & 1);
+		res.set_bit((i << 2) | 1, (c >> 1) & 1);
+		res.set_bit((i << 2) | 2, (c >> 2) & 1);
+		res.set_bit((i << 2) | 3, (c >> 3) & 1);
+	}
+	if (neg)
+		res = -res;
 	return res;
 }
 
@@ -135,6 +173,6 @@ ostream& operator<<(ostream& os, const BigInt& p) {
 istream& operator>>(istream& is, BigInt& p) {
 	string s;
 	is >> s;
-	p = BigInt(s.c_str());
+	p = BigInt::from_dec_str(s);
 	return is;
 }

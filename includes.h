@@ -10,3 +10,4 @@ using namespace std;
 
 const int __LENGTH_OF_BITS = 128;
 const int MAX_DEC_LENGTH = 39;
+const int MAX_HEX_LENGTH = 32;

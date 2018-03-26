@@ -4,13 +4,14 @@
 class BigInt: public BigNum {
 public:
 	BigInt();
-    BigInt(string);
     BigInt(const bool* const);
     BigInt(const BigInt&);
     BigInt(long long);
 	BigInt(int);
 
 	static BigInt from_dec_str(string);
+	static BigInt from_hex_str(string);
+	static BigInt from_bin_str(string);
 	string to_bin() const;
 	string to_dec() const;
 	string to_hex() const;
