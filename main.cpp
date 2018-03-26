@@ -1,23 +1,23 @@
 #include "includes.h"
 //#include "helper.h"
 
-void test() {
-	freopen("testcases/test.in", "r", stdin);
-	freopen("testcases/test.out", "w", stdout);
-	int T;
-	cin >> T;
-	for (int tc = 0; tc < T; ++tc) {
-		string sa, sb;
-		cin >> sa >> sb;
-		BigInt a = BigInt::from_dec_str(sa);
-		BigInt b = BigInt::from_dec_str(sb);
-		cout << a + b << " "
-			 << a - b << " "
-			 << a * b << " "
-			 << a / b << " "
-			 << a % b << endl;
-	}
-}
+//void test() {
+//	freopen("testcases/test.in", "r", stdin);
+//	freopen("testcases/test.out", "w", stdout);
+//	int T;
+//	cin >> T;
+//	for (int tc = 0; tc < T; ++tc) {
+//		string sa, sb;
+//		cin >> sa >> sb;
+//		BigInt a = BigInt::from_dec_str(sa);
+//		BigInt b = BigInt::from_dec_str(sb);
+//		cout << a + b << " "
+//			 << a - b << " "
+//			 << a * b << " "
+//			 << a / b << " "
+//			 << a % b << endl;
+//	}
+//}
 
 int main() {
 //<<<<<<< HEAD
@@ -39,8 +39,8 @@ int main() {
 	//BigInt a(10);//10
 	BigInt a(200);
 	cout << a << endl;
-	a = a / BigInt(2);
-	cout<<a<<endl;
+	a -= BigInt(2);
+	cout << a << endl;
 	return 0;
 //=======
 	/*BigInt a = 5;
@@ -58,6 +58,6 @@ int main() {
 // 	cout << a << endl;
 // 	cout << b << endl;
 // 	cout << a / b << endl;
-	test();
+	//test();
 //>>>>>>> bd12e7a44220dc13fb0c52eabdbb0275adbba7c0
 }

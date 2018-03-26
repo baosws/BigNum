@@ -40,6 +40,7 @@ public:
     BigInt& operator<<=(int);
     BigInt& operator>>=(int);
 
+	bool BigInt::operator==(long long other) const;
     bool operator==(const BigInt&) const;
     bool operator!=(const BigInt&) const;
     bool operator<(const BigInt&) const;

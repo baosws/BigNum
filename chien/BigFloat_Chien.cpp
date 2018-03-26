@@ -12,13 +12,8 @@ void BigFloat::set_exponent(unsigned short exp)
 }
 bool BigFloat::is_exponent_overflow(){ return true; }
 bool BigFloat::is_exponent_underflow(){ return true; }
-
 bool BigFloat::is_significand_overflow(){ return true; }
-
 bool BigFloat::is_normalized(){ return true; }
-
-
-
 
 BigInt BigFloat::get_significand() const
 {
@@ -64,21 +59,21 @@ void BigFloat::shift_significand_left()
 
 BigFloat BigFloat::operator+(const BigFloat& another) const
 {
-	if (*this == new BigFloat(0.0)) // just temporary solution when have not had oper== yet.
+	if (*this == BigFloat(0.0)) // just temporary solution when have not had oper== yet.
 		return BigFloat(another);
 	else 
 	if (&another == new BigFloat(0.0)) // just temporary solution when have not had oper== yet.
 		return BigFloat(*this);
-	//res = X + Y
+
 	BigFloat Y(another), X(*this);
 	unsigned short X_exponent, Y_exponent;
+	
+	//Balance two exponents
 	do
 	{
 		X_exponent = X.get_exponent();
 		Y_exponent = Y.get_exponent();
-		if (X_exponent == Y_exponent)
-			break;
-		else
+		if (X_exponent != Y_exponent)
 		{
 			if (X_exponent > Y_exponent)
 			{
@@ -99,8 +94,8 @@ BigFloat BigFloat::operator+(const BigFloat& another) const
 		}
 	} while (X_exponent != Y_exponent);
 
+
 	BigFloat res;
-	
 	res.add_signed_significands(X, Y);
 
 	if (res.get_significand() == BigInt(0))

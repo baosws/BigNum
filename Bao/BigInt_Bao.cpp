@@ -72,6 +72,10 @@ BigInt& BigInt::operator=(const BigInt& other) {
 	return *this;
 }
 
+bool BigInt::operator==(long long other) const {
+	return this->data[0] == 0 && this->data[1] == other;
+}
+
 bool BigInt::operator==(const BigInt& other) const {
 	return this->data[0] == other.data[0] && this->data[1] == other.data[1];
 }
@@ -112,12 +116,12 @@ ostream& operator<<(ostream& os, const BigInt& num) {
 	}
 	while (s.length() > 1 && s[0] == '0')
 		s.erase(0, 1);
-	return os << s;
+	return os<< s;
 }
 
 istream& operator>>(istream& is, BigInt& p) {
 	string s;
-	is >> s;
+	//is >> s;
 	p = BigInt(s.c_str());
 	return is;
 }
