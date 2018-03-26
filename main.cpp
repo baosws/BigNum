@@ -37,11 +37,19 @@ int main() {
 //<<<<<<< HEAD
 	//std::cout << 11321;
 	//BigInt a(10);//10
+<<<<<<< HEAD
 	BigInt a(200);
 	cout << a << endl;
 	a -= BigInt(2);
 	cout << a << endl;
 	return 0;
+=======
+// 	BigInt a(200);
+// 	cout << a << endl;
+// 	a = a / BigInt(2);
+// 	cout<<a<<endl;
+// 	return 0;
+>>>>>>> 584964a37a80fff5b83ebc7c023b27b4b5284ba4
 //=======
 	/*BigInt a = 5;
 	BigInt b = 4;
