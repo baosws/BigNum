@@ -91,7 +91,8 @@ void BigFloat::set_exponent(unsigned short exp)
 	}
 }
 
-BigInt BigFloat::get_significand() {
+BigInt BigFloat::get_significand() const
+{
 	BigInt sig(0);
 	for (int i = 0; i < 112; ++i) {
 		sig.set_bit(i,this->get_bit(i));
@@ -101,6 +102,6 @@ BigInt BigFloat::get_significand() {
 
 void BigFloat::set_significand(const BigInt & biNum) {
 	for (int i = 0; i < 112; ++i) {
-		this->set_bit(i,bigNum.get_bit(i));
+		this->set_bit(i, biNum.get_bit(i));
 	}
 }
