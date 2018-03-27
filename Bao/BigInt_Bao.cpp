@@ -183,7 +183,7 @@ ostream& operator<<(ostream& os, const BigInt& p) {
 
 istream& operator>>(istream& is, BigInt& p) {
 	string s;
-	is >> s;
+//	is >> s;
 	p = BigInt::from_dec_str(s);
 	return is;
 }
