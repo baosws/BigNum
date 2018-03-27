@@ -3,18 +3,22 @@
 
 class BigFloat : public BigNum {
 public:
-	BigFloat(const string&);
 	BigFloat(const bool* const);
 	BigFloat(const BigFloat&);
 	BigFloat(double);
+	BigFloat(float);
 	BigFloat() :BigNum(){}
+
+	static BigFloat from_dec_str(const string&);
+	static BigFloat from_bin_str(const string&);
+	static BigFloat from_hex_str(const string&);
 	//----------------
     BigFloat operator+(const BigFloat&) const;
     BigFloat operator-(const BigFloat&) const;
     BigFloat operator*(const BigFloat&) const;
     BigFloat operator/(const BigFloat&) const;
 
-	unsigned short get_exponent();
+	unsigned short get_exponent() const;
 	void set_exponent(unsigned short exp);
 
 	BigInt get_significand() const;
@@ -23,12 +27,12 @@ public:
 	void shift_significand_right();
 	void shift_significand_left();
 
-	bool is_exponent_overflow();
-	bool is_exponent_underflow();
+	bool is_exponent_overflow() const;
+	bool is_exponent_underflow() const;
 	
-	bool is_significand_overflow();
+	bool is_significand_overflow() const;
 
-	bool is_normalized();
+	bool is_normalized() const;
 
 
 	//-----------------

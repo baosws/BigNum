@@ -19,7 +19,7 @@ BigInt BigInt::operator*(const BigInt& Mutiplier) const
 	BigInt Q(Mutiplier);
 	bool	Q_1 = 0;
 	
-	for(int i = 0; i < __LENGTH_OF_BITS; i++)
+	for(int i = 0; i < LENGTH_OF_BITS; i++)
 	{
 		switch(Q.get_bit(0) - Q_1)
 		{
