@@ -3,10 +3,10 @@
 
 class BigFloat : public BigNum {
 public:
-	BigFloat(const string&){};
-	BigFloat(const bool* const){};
-	BigFloat(const BigFloat&){};
-	BigFloat(double){};
+	BigFloat(const string&);
+	BigFloat(const bool* const);
+	BigFloat(const BigFloat&);
+	BigFloat(double);
 	BigFloat() :BigNum(){}
 	//----------------
     BigFloat operator+(const BigFloat&) const;
@@ -39,7 +39,7 @@ public:
 
     BigFloat& operator=(const BigFloat&);
     
-	bool operator==(const BigFloat&) const{ return true; };//temporary solution
+	bool operator==(const BigFloat&) const;
     bool operator!=(const BigFloat&) const;
     bool operator<(const BigFloat&) const;
     bool operator>(const BigFloat&) const;

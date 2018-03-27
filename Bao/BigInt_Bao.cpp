@@ -58,13 +58,19 @@ BigInt BigInt::from_bin_str(string binStr)
 }
 
 string BigInt::to_bin() const {
+	if (this->get_bit(127) == 1)
+		return "-" + (-*this).to_bin();
 	string res = "";
 	for (int i = 0; i < __LENGTH_OF_BITS; ++i)
 		res = char(this->get_bit(i) + '0') + res;
+	while (res.length() > 1 && res[0] == '0')
+		res.erase(0, 1);
 	return res;
 }
 
 string BigInt::to_hex() const {
+	if (this->get_bit(127) == 1)
+		return "-" + (-*this).to_hex();
 	string res = "";
 	for (int i = 0; i < __LENGTH_OF_BITS; i += 4) {
 		int c = (this->get_bit(i + 3) << 3)
@@ -73,6 +79,8 @@ string BigInt::to_hex() const {
 			  + this->get_bit(i);	  
 		res = char(c < 10 ? c + '0' : c - 10 + 'A') + res;
 	}
+	while (res.length() > 1 && res[0] == '0')
+		res.erase(0, 1);
 	return res;
 }
 
