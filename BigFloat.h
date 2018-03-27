@@ -12,9 +12,12 @@ public:
 	static BigFloat from_dec_str(const string&);
 	static BigFloat from_bin_str(const string&);
 	static BigFloat from_hex_str(const string&);
+	static const BigFloat INF;
+	static const BigFloat ZERO;
 	//----------------
     BigFloat operator+(const BigFloat&) const;
     BigFloat operator-(const BigFloat&) const;
+	BigFloat operator-() const;
     BigFloat operator*(const BigFloat&) const;
     BigFloat operator/(const BigFloat&) const;
 
@@ -32,8 +35,13 @@ public:
 	
 	bool is_significand_overflow() const;
 
+	bool is_zero() const;
 	bool is_normalized() const;
+	bool is_denormalized() const;
+	bool is_inf() const;
+	bool is_nan() const;
 
+	BigInt get_signed_significand() const;
 
 	//-----------------
     BigFloat& operator+=(const BigFloat&);

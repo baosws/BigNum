@@ -1,157 +1,88 @@
 #include "../includes.h"
-unsigned short BigFloat::get_exponent()
-{
-	//set 15 exponet bits into unsigned short
-	unsigned short res = 0;
-	return res;
+
+bool BigFloat::is_denormalized() const {
+	return this->get_exponent() == 1;
+}
+bool BigFloat::is_zero() const { // should not call get_exponent here (inf recursion)
+	return this->data[0] == 0
+		&& (this->data[1] << 1) == 0; // exclude the sign bit
+}
+bool BigFloat::is_inf() const {
+	return this->get_exponent() == (1 << 15) - 1
+		&& this->get_significand() == (BigInt)0;
+}
+bool BigFloat::is_nan() const {
+	return this->get_exponent() == (1 << 15) - 1
+		&& this->get_significand() != (BigInt)0;
+}
+bool BigFloat::is_normalized() const {
+	return !this->is_denormalized()
+		&& !this->is_inf()
+		&& !this->is_nan()
+		&& !this->is_zero();
 }
 
-void BigFloat::set_exponent(unsigned short exp)
-{
-	//set first 15 bits of exp to exponent area
+BigInt BigFloat::get_signed_significand() const {
+	BigInt sig = this->get_significand();
+	if (this->is_normalized())
+		sig.set_bit(112, 1);
+	if (this->get_bit(127) == 1)
+		sig = -sig;
+	return sig;
 }
-bool BigFloat::is_exponent_overflow(){ return false; }
-bool BigFloat::is_exponent_underflow(){ return false; }
-bool BigFloat::is_significand_overflow(){ return false; }
-bool BigFloat::is_normalized(){ return false; }
 
-BigInt BigFloat::get_significand() const
-{
-	BigInt res(0);
-	for (int i = 0; i <= 111; i++)
-		res.set_bit(i, this->get_bit(111-i));
-	return res;
-}
-void BigFloat::set_significand(const BigInt& biNum)
-{
-	for (int i = 0; i <= 111; i++)
-		this->set_bit(i, biNum.get_bit(111-i));
-}
-void BigFloat::shift_significand_right()
-{
-	for (int i = 111; i > 0; i--)
-		this->set_bit(i, this->get_bit(i - 1));
-	this->set_bit(0, false);
-}
-void BigFloat::shift_significand_left()
-{
-	for (int i = 0; i <= 110; i++)
-		this->set_bit(i, this->get_bit(i + 1));
-	this->set_bit(111, false);
-}
-//bool BigFloat::is_exponent_overflow()
-//{
-//	return true;
-//}
-//bool BigFloat::is_exponent_underflow()
-//{
-//	return true;
-//}
-//bool BigFloat::is_significand_overflow()
-//{
-//	return true;
-//}
-//bool BigFloat::is_normalized()
-//{
-//	return true;
-//}
-//-----------
-
-BigFloat BigFloat::operator+(const BigFloat& another) const
-{
-	if (*this == BigFloat(0.0))
-		return BigFloat(another);
-	else 
-	if (another == BigFloat(0.0))
-		return BigFloat(*this);
-
-	BigFloat Y(another), X(*this);
-	unsigned short X_exponent, Y_exponent;
-	
-	//Balance two exponents
-	do
-	{
-		X_exponent = X.get_exponent();
-		Y_exponent = Y.get_exponent();
-		if (X_exponent != Y_exponent)
-		{
-			if (X_exponent > Y_exponent)
-			{
-				X_exponent++;
-				X.set_exponent(X_exponent);
-				X.shift_significand_right(); //logical shift
-				if (X.get_significand() == 0)
-					return Y;
-			}
-			else
-			{
-				Y_exponent++;
-				Y.set_exponent(Y_exponent);
-				Y.shift_significand_right();
-				if (Y.get_significand() == 0)
-					return X;
-			}
-		}
-	} while (X_exponent != Y_exponent);
-
-
+// too many cases, need to be optimized
+BigFloat BigFloat::operator+(const BigFloat& other) const {
+	BigInt X = this->get_signed_significand();
+	BigInt Y = other.get_signed_significand();
+	int x = this->get_exponent();
+	int y = other.get_exponent();
+	while (x < y) {
+		x++;
+		X = X >> 1;
+		if (X == (BigInt)0)
+			return other;
+	}
+	while (y < x) {
+		y++;
+		Y = Y >> 1;
+		if (Y == (BigInt)0)
+			return *this;
+	}
 	BigFloat res;
-	res.add_signed_significands(X, Y);
-
-	if (res.get_significand() == 0)
-		return res;//res=0
-	
-	if (res.is_significand_overflow())
-	{
-		res.shift_significand_right();
-		X_exponent++;
-		res.set_exponent(X_exponent);
-		if (res.is_exponent_overflow())
-			throw new exception("Exponent overflow!!!");
+	BigInt Z = X + Y;
+	if (Z.get_bit(127) == 1) {
+		Z = -Z;
+		res.set_bit(127, 1);
 	}
-
-	
-	while (!res.is_normalized())
-	{
-		res.shift_significand_left();
-		X_exponent = res.get_exponent();
-		X_exponent--;
-		res.set_exponent(X_exponent);
-		if (res.is_exponent_underflow())
-			throw new exception("Exponent underflow!!!");
+	auto get_high_bytes = [] (BigInt& Z) {return (long long)(Z >> 112) & ((1 << 16) - 1);};
+	while (x < (1 << 15) - 1 && get_high_bytes(Z) > 1) {
+		x++;
+		Z = Z >> 1;
 	}
-	//res = res.round();
-	return res;		
+	if (x == (1 << 15) - 1 && get_high_bytes(Z) > 1)
+		return BigFloat::INF;
+	while (x > 1 && get_high_bytes(Z) == 0) {
+		x--;
+		Z = Z << 1;
+	}
+	if (x == 1 && Z == (BigInt)0) { // zero
+		x--;
+		res.set_bit(127, 0);
+	}
+	res.set_exponent(x);
+	res.set_significand(Z);
+	return res;
 }
 
-BigFloat BigFloat::operator-(const BigFloat& another) const
-{
-	BigFloat temp(another);
-	temp.set_bit(127, 1 - another.get_bit(127));
-	return this->operator+(temp);
+BigFloat BigFloat::operator-() const {
+	if (this->is_zero())
+		return *this;
+	BigFloat res(*this);
+	res.set_bit(127, 1 ^ res.get_bit(127));
+	return res;
 }
-
-
-void BigFloat::add_signed_significands(const BigFloat&X, const BigFloat&Y)
+BigFloat BigFloat::operator-(const BigFloat& other) const
 {
-	//Add signed significands
-	BigInt X_significand = X.get_significand();
-	BigInt Y_significand = Y.get_significand();
-
-	if (X.get_bit(127) == 1)
-		X_significand = BigInt(0) - X_significand;
-
-	if (Y.get_bit(127) == 1)
-		Y_significand = BigInt(0) - Y_significand;
-
-	BigInt Added_Significands = X_significand + Y_significand;
-
-	this->set_bit(127, Added_Significands.get_bit(127));
-
-	//change res's significand if it was negative
-	if (Added_Significands.get_bit(127) == 1)//negative
-		Added_Significands = BigInt(0) - Added_Significands; //significand is unsigned
-
-	this->set_significand(Added_Significands);//just set last 112 bit
-
+	return *this + (-other);
 }
