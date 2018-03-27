@@ -8,11 +8,11 @@ bool BigFloat::is_zero() const { // should not call get_exponent here (inf recur
 		&& (this->data[1] << 1) == 0; // exclude the sign bit
 }
 bool BigFloat::is_inf() const {
-	return this->get_exponent() == (1 << 15) - 1
+	return this->get_exponent() == FULL_EXPONENT
 		&& this->get_significand() == (BigInt)0;
 }
 bool BigFloat::is_nan() const {
-	return this->get_exponent() == (1 << 15) - 1
+	return this->get_exponent() == FULL_EXPONENT
 		&& this->get_significand() != (BigInt)0;
 }
 bool BigFloat::is_normalized() const {
@@ -31,7 +31,7 @@ BigInt BigFloat::get_signed_significand() const {
 	return sig;
 }
 
-// too many cases, need to be optimized
+// too many cases, needs to be optimized
 BigFloat BigFloat::operator+(const BigFloat& other) const {
 	BigInt X = this->get_signed_significand();
 	BigInt Y = other.get_signed_significand();
@@ -56,14 +56,14 @@ BigFloat BigFloat::operator+(const BigFloat& other) const {
 		res.set_bit(127, 1);
 	}
 	auto get_high_bytes = [] (BigInt& Z) {return (long long)(Z >> 112) & ((1 << 16) - 1);};
-	while (x < (1 << 15) - 1 && get_high_bytes(Z) > 1) {
-		x++;
+	while (x < FULL_EXPONENT && get_high_bytes(Z) > 1) {
+		++x;
 		Z = Z >> 1;
 	}
-	if (x == (1 << 15) - 1 && get_high_bytes(Z) > 1)
+	if (x == FULL_EXPONENT && get_high_bytes(Z) > 1)
 		return BigFloat::INF;
 	while (x > 1 && get_high_bytes(Z) == 0) {
-		x--;
+		--x;
 		Z = Z << 1;
 	}
 	if (x == 1 && Z == (BigInt)0) { // zero

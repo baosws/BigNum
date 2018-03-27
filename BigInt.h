@@ -15,6 +15,9 @@ public:
 	string to_bin() const;
 	string to_dec() const;
 	string to_hex() const;
+
+	pair<BigInt, BigInt> full_multiply(const BigInt&) const;
+	pair<BigInt, BigInt> full_divide(const BigInt&) const;
     
     BigInt operator+(const BigInt&) const;
 	BigInt operator-() const;
@@ -39,7 +42,7 @@ public:
     BigInt& operator<<=(int);
     BigInt& operator>>=(int);
 
-	bool BigInt::operator==(int other) const;
+	bool operator==(int other) const;
 
     bool operator==(const BigInt&) const;
     bool operator!=(const BigInt&) const;

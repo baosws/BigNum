@@ -16,7 +16,7 @@ BigFloat::BigFloat(double other) : BigNum() {
 	long long t = *(long long*)&other;
 	this->set_bit(127, (t >> 63) & 1);
 	int exponent = (t >> 52) & (~(1 << 11)) // get other's exponent
-					- (1 << 10)- 1          // get signed value
+					- (1 << 10) - 1         // get signed value
 					+ (1 << 14) - 1;        // to 15-bias
 	this->set_exponent(exponent);
 	this->set_significand(BigInt(t & ((1ll << 52) - 1)) << (112 - 52));

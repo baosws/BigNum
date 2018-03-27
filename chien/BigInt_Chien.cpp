@@ -12,12 +12,11 @@ BigInt::BigInt(long long llNum)
 
 BigInt::BigInt(int num): BigInt((long long) num) {}
 
-// need more checking!!!
-BigInt BigInt::operator*(const BigInt& Mutiplier) const
+pair<BigInt, BigInt> BigInt::full_multiply(const BigInt& Mutiplier) const
 {
 	BigInt A(0);
 	BigInt Q(Mutiplier);
-	bool	Q_1 = 0;
+	bool   Q_1 = 0;
 	
 	for(int i = 0; i < LENGTH_OF_BITS; i++)
 	{
@@ -35,49 +34,17 @@ BigInt BigInt::operator*(const BigInt& Mutiplier) const
 		Q = Q >> 1;
 		Q.set_bit(127, A.get_bit(0));
 		A = A >> 1;
-		//A.set_bit(127, A.get_bit(126));	
 	}
-	//Check overflow
-	if (A != BigInt(0)) { // overflow
-		// insert exception handling here
-	}
-	return Q;
+	return pair<BigInt, BigInt>(A, Q);
 }
 
-BigInt BigInt::operator/(const BigInt& Divisor) const
+// need more checking!!!
+BigInt BigInt::operator*(const BigInt& Mutiplier) const
 {
-	if (Divisor == (BigInt)0)
-		throw "ERROR: Divided by zero!!!";
-	bool neg = (this->get_bit(127) != Divisor.get_bit(127));
-
-	BigInt A(0);
-	BigInt M(Divisor);
-	BigInt Q(*this); //Q = Dividend
-	if (M < (BigInt)0)
-		M = -M;
-	if (Q < (BigInt)0)
-		Q = -Q;
-	for(int i = 0; i < 128; i++)
-	{
-		A = A << 1;
-		A.set_bit(0, Q.get_bit(127));
-		Q = Q << 1;
-		A = A - M;
-		if(A.get_bit(127) == 0) //(A >=0)?
-			Q.set_bit(0, 1);		
-		else
-		{
-			Q.set_bit(0, 0);
-			A = A + M;
-		}
-	}
-	if(neg == true) {
-		Q = -Q;
-	}
-	return Q;
+	return this->full_multiply(Mutiplier).second;
 }
 
-BigInt BigInt::operator%(const BigInt& Divisor) const
+pair<BigInt, BigInt> BigInt::full_divide(const BigInt& Divisor) const
 {
 	if (Divisor == (BigInt)0)
 		throw "ERROR: Divided by zero!!!";
@@ -106,8 +73,17 @@ BigInt BigInt::operator%(const BigInt& Divisor) const
 	}
 	if(neg == true) {
 		A = -A;
+		Q = -Q;
 	}
-	return A;
+	return pair<BigInt, BigInt>(A, Q);
+}
+
+BigInt BigInt::operator/(const BigInt& Divisor) const {
+	return this->full_divide(Divisor).second;
+}
+BigInt BigInt::operator%(const BigInt& Divisor) const
+{
+	return this->full_divide(Divisor).first;
 }
 
 BigInt BigInt::operator>>(int amountBits) const
