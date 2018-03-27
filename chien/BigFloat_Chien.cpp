@@ -1,32 +1,27 @@
 #include "../includes.h"
-unsigned short BigFloat::get_exponent()
-{
-	//set 15 exponet bits into unsigned short
-	unsigned short res = 0;
-	return res;
-}
 
-void BigFloat::set_exponent(unsigned short exp)
+//Checking the exponent will be overflow if increase 1
+bool BigFloat::is_exponent_overflow()
 {
-	//set first 15 bits of exp to exponent area
+	for (int i = 112; i <= 126;i++)
+	if (this->get_bit(i) == false)
+		return false;
+	return true; 
 }
-bool BigFloat::is_exponent_overflow(){ return false; }
-bool BigFloat::is_exponent_underflow(){ return false; }
+//Checking the exponent will be overflow if decrease 1
+bool BigFloat::is_exponent_underflow()
+{ 
+	for (int i = 112; i <= 126; i++)
+	if (this->get_bit(i) == true)
+		return false;
+	return true; 
+}
 bool BigFloat::is_significand_overflow(){ return false; }
-bool BigFloat::is_normalized(){ return false; }
+bool BigFloat::is_normalized()
+{ 
+	return ((this->get_exponent() != 0) && (this->get_significand() != BigInt(0)));
+}
 
-BigInt BigFloat::get_significand() const
-{
-	BigInt res(0);
-	for (int i = 0; i <= 111; i++)
-		res.set_bit(i, this->get_bit(111-i));
-	return res;
-}
-void BigFloat::set_significand(const BigInt& biNum)
-{
-	for (int i = 0; i <= 111; i++)
-		this->set_bit(i, biNum.get_bit(111-i));
-}
 void BigFloat::shift_significand_right()
 {
 	for (int i = 111; i > 0; i--)
@@ -97,28 +92,35 @@ BigFloat BigFloat::operator+(const BigFloat& another) const
 
 	BigFloat res;
 	res.add_signed_significands(X, Y);
+	res.set_exponent(X_exponent);
 
 	if (res.get_significand() == 0)
 		return res;//res=0
 	
 	if (res.is_significand_overflow())
-	{
-		res.shift_significand_right();
-		X_exponent++;
-		res.set_exponent(X_exponent);
+	{		
 		if (res.is_exponent_overflow())
 			throw new exception("Exponent overflow!!!");
+		else
+		{
+			res.shift_significand_right();
+			X_exponent++;
+			res.set_exponent(X_exponent);
+		}
 	}
 
 	
 	while (!res.is_normalized())
 	{
-		res.shift_significand_left();
-		X_exponent = res.get_exponent();
-		X_exponent--;
-		res.set_exponent(X_exponent);
 		if (res.is_exponent_underflow())
 			throw new exception("Exponent underflow!!!");
+		else
+		{
+			res.shift_significand_left();
+			X_exponent = res.get_exponent();
+			X_exponent--;
+			res.set_exponent(X_exponent);
+		}
 	}
 	//res = res.round();
 	return res;		
