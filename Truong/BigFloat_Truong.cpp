@@ -1,13 +1,14 @@
 #include "../includes.h"
 
 string BigFloat::to_hex_str() const {
-	string binStr = (*this).to_bin_str();
+	string bin_str = this->to_bin_str();
 	string res = "";
+	int dot = res.find('.');
 	for (int i = 0; i < LENGTH_OF_BITS; i+= 4) {
-		int temp= (int(binStr[i]-48)<<3) +
-							(int(binStr[i+1]-48)<<2) +
-							(int(binStr[i+2]-48)<<1) +
-							(int(binStr[i+3]-48));
+		int temp= (int(bin_str[i]-48)<<3) +
+							(int(bin_str[i+1]-48)<<2) +
+							(int(bin_str[i+2]-48)<<1) +
+							(int(bin_str[i+3]-48));
 		res+= char(temp<10 ? temp + '0' : temp - 10 + 'A');
 	}
 	while (res.length()> 1 && res[0] == '0')
@@ -46,7 +47,7 @@ unsigned short BigFloat::get_exponent() const
 		if (this->get_bit(i))
 			exponent |= 1 << (i - 112);
 	}
-	return exponent + (exponent == FULL_EXPONENT >> 1); // 0 -> 1 (-127 -> -126)
+	return exponent + (exponent == 0); // 0 -> 1 (-127 -> -126)
 }
 
 void BigFloat::set_exponent(unsigned short exp)
