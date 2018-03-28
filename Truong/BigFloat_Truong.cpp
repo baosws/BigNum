@@ -1,18 +1,31 @@
 #include "../includes.h"
 
 string BigFloat::to_hex_str() const {
+	if (this->get_bit(127) == 1)
+		return "-" + (-*this).to_hex_str();
 	string bin_str = this->to_bin_str();
 	string res = "";
-	int dot = res.find('.');
-	for (int i = 0; i < LENGTH_OF_BITS; i+= 4) {
-		int temp= (int(bin_str[i]-48)<<3) +
-							(int(bin_str[i+1]-48)<<2) +
-							(int(bin_str[i+2]-48)<<1) +
-							(int(bin_str[i+3]-48));
-		res+= char(temp<10 ? temp + '0' : temp - 10 + 'A');
+	int dot = bin_str.find('.');
+	while (dot % 4) {
+		bin_str = '0' + bin_str;
+		dot++;
 	}
-	while (res.length()> 1 && res[0] == '0')
-		res.erase(0,1);
+	while ((bin_str.length() - 1 - dot) % 4)
+		bin_str = bin_str + '0';
+	for (int i = 0; i < (int)bin_str.length(); i += 4)
+		if (bin_str[i] != '.') {
+			int temp= (int(bin_str[i]-48)<<3) +
+						(int(bin_str[i+1]-48)<<2) +
+						(int(bin_str[i+2]-48)<<1) +
+						(int(bin_str[i+3]-48));
+			res+= char(temp<10 ? temp + '0' : temp - 10 + 'A');
+		}
+		else {
+			res += '.';
+			i -= 3;
+		}
+	while (res.back() == '0' && res[res.length() - 2] != '.')
+		res.erase(res.length() - 1, 1);
 	return res;
 }
 

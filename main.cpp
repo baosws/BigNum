@@ -20,12 +20,13 @@
 //}
 
 int main() {
-	string t = "100000000001.010000000000000001";
+	string t = "1100.001";
 	BigFloat a = BigFloat::from_bin_str(t);
 	BigFloat b = 1.0;
-// 	cout << a.to_bin_str() << endl;
+	cout << a.to_bin_str() << endl;
+	cout << a.to_hex_str() << endl;
 // 	cout << t << endl;
 // 	cout << b.to_bin_str() << endl;
-	cout << (a.to_bin_str() == t) << endl;
+// 	cout << (a.to_bin_str() == t) << endl;
 	return 0;
 }
