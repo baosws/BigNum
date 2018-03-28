@@ -2,7 +2,8 @@
 
 string BigFloat::to_hex_str() const {
 	string binStr = (*this).to_bin_str();
-	for (int i = 0; i < __LENGTH_OF_BITS; i+= 4) {
+	string res = "";
+	for (int i = 0; i < LENGTH_OF_BITS; i+= 4) {
 		int temp= (int(binStr[i]-48)<<3) +
 							(int(binStr[i+1]-48)<<2) +
 							(int(binStr[i+2]-48)<<1) +
