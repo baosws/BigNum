@@ -56,3 +56,34 @@ void BigFloat::set_significand(const BigInt & sig) {
 		this->set_bit(i, sig.get_bit(i));
 	}
 }
+
+BigFloat BigFloat::from_bin_str(string bin_str) {
+	if (bin_str == "0.0")
+		return BigFloat::ZERO;
+	if (bin_str == "INF")
+		return BigFloat::INF;
+	bool neg = false;
+	if (bin_str[0] == '-') {
+		neg = true;
+		bin_str.erase(0, 1);
+	}
+	int dot = bin_str.find('.');
+	if (dot == (int)string::npos) {
+		bin_str += ".0";
+		dot = bin_str.length() - 2;
+	}
+	int one = bin_str.find('1');
+	if (one < dot)
+		bin_str.erase(dot, 1);
+	BigFloat res;
+	int exp = (one < dot ? dot - one - 1 : dot - one) + (FULL_EXPONENT >> 1);
+	if (exp < 1) {
+		one = bin_str.length() - 113;
+		exp = 0;
+	}
+	res.set_exponent(exp);
+	int n = bin_str.length();
+	for (int i = one + 1; i < n && i < one + 113; ++i)
+	   res.set_bit(112 + one - i, bin_str[i] == '1');
+	return res;
+}
