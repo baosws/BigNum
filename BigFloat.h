@@ -12,9 +12,13 @@ public:
 	static BigFloat from_dec_str(const string&);
 	static BigFloat from_bin_str(const string&);
 	static BigFloat from_hex_str(const string&);
+	string to_dec_str() const;
+	string to_bin_str() const;
+	string to_hex_str() const;
+	
 	static const BigFloat INF;
 	static const BigFloat ZERO;
-	//----------------
+	
     BigFloat operator+(const BigFloat&) const;
     BigFloat operator-(const BigFloat&) const;
 	BigFloat operator-() const;

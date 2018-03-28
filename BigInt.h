@@ -12,9 +12,9 @@ public:
 	static BigInt from_dec_str(string);
 	static BigInt from_hex_str(string);
 	static BigInt from_bin_str(string);
-	string to_bin() const;
-	string to_dec() const;
-	string to_hex() const;
+	string to_bin_str() const;
+	string to_dec_str() const;
+	string to_hex_str() const;
 
 	pair<BigInt, BigInt> full_multiply(const BigInt&) const;
 	pair<BigInt, BigInt> full_divide(const BigInt&) const;

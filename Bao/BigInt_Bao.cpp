@@ -21,9 +21,9 @@ BigInt BigInt::from_dec_str(string dec_str) {
 	return res;
 }
 
-string BigInt::to_dec() const {
+string BigInt::to_dec_str() const {
 	if (this->get_bit(127) == 1)
-		return "-" + (-*this).to_dec();
+		return "-" + (-*this).to_dec_str();
 	const BigInt d(10000000000000ll);
 	BigInt p(*this);
 	long long a[3];
@@ -57,9 +57,9 @@ BigInt BigInt::from_bin_str(string binStr)
 	return res;
 }
 
-string BigInt::to_bin() const {
+string BigInt::to_bin_str() const {
 	if (this->get_bit(127) == 1)
-		return "-" + (-*this).to_bin();
+		return "-" + (-*this).to_bin_str();
 	string res = "";
 	for (int i = 0; i < LENGTH_OF_BITS; ++i)
 		res = char(this->get_bit(i) + '0') + res;
@@ -68,9 +68,9 @@ string BigInt::to_bin() const {
 	return res;
 }
 
-string BigInt::to_hex() const {
+string BigInt::to_hex_str() const {
 	if (this->get_bit(127) == 1)
-		return "-" + (-*this).to_hex();
+		return "-" + (-*this).to_hex_str();
 	string res = "";
 	for (int i = 0; i < LENGTH_OF_BITS; i += 4) {
 		int c = (this->get_bit(i + 3) << 3)
@@ -176,7 +176,7 @@ BigInt::operator long long() const {
 
 ostream& operator<<(ostream& os, const BigInt& p) {
 	//os << p.to_bin();
-	puts(p.to_bin().c_str());
+	puts(p.to_bin_str().c_str());
 	return os;
 
 }

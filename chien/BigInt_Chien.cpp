@@ -181,26 +181,5 @@ bool BigInt::operator > (const BigInt &another) const
 }
 
 bool BigInt::operator==(int other) const {
-	return this->data[0] == 0 && this->data[1] == long long(other);
+	return BigInt::operator==((BigInt)other);
 }
-//
-//BigInt& BigInt::operator+=(const BigInt&another)
-//{
-//	*this = this->operator+(another);
-//	return *this;
-//}
-//BigInt& BigInt::operator-=(const BigInt&another)
-//{
-//	*this = this->operator-(another);
-//	return *this;
-//}
-//BigInt& BigInt::operator*=(const BigInt&another)
-//{
-//	*this = this->operator*(another);
-//	return *this;
-//}
-//BigInt& BigInt::operator/=(const BigInt&another)
-//{
-//	*this = this->operator/(another);
-//	return *this;
-//}

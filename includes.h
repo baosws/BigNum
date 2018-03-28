@@ -3,6 +3,7 @@
 #include <cstring>
 #include <iostream>
 #include <utility>
+#include <tuple>
 using namespace std;
 #include "BigNum.h"
 #include "BigInt.h"
