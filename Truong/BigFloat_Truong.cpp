@@ -1,5 +1,19 @@
 #include "../includes.h"
 
+string BigFloat::to_hex_str() const {
+	string binStr = (*this).to_bin_str();
+	for (int i = 0; i < __LENGTH_OF_BITS; i+= 4) {
+		int temp= (int(binStr[i]-48)<<3) +
+							(int(binStr[i+1]-48)<<2) +
+							(int(binStr[i+2]-48)<<1) +
+							(int(binStr[i+3]-48));
+		res+= char(temp<10 ? temp + '0' : temp - 10 + 'A');
+	}
+	while (res.length()> 1 && res[0] == '0')
+		res.erase(0,1);
+	return res;
+}
+
 BigFloat::BigFloat(const bool * const other) {
 	for (int i = 0; i < LENGTH_OF_BITS; i++)
 	{
