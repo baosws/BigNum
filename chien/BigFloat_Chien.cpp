@@ -1,4 +1,6 @@
 #include "../includes.h"
+const BigFloat BigFloat::INF ;
+const BigFloat BigFloat::ZERO;
 
 bool BigFloat::is_denormalized() const {
 	return this->get_exponent() == 1;
@@ -85,4 +87,37 @@ BigFloat BigFloat::operator-() const {
 BigFloat BigFloat::operator-(const BigFloat& other) const
 {
 	return *this + (-other);
+}
+
+
+
+string BigFloat::to_dec_str() const
+{
+	BigFloat A(*this);
+	string res = "";
+	if (this->get_bit(127) == 1)
+		return "-" + (-A).to_dec_str();
+	int exp = A.get_exponent() - (int)pow(2, 14) + 1;//bias value;
+	//
+	if (exp < 0)
+	{
+		res += "0.";
+		for (int i = 0; i < -exp; i++) res.push_back('0');
+	}
+	else
+	{
+		string mansita = "1";
+		for (int i = 0; i < exp; i++)
+			mansita += A.get_first_nbits_of_significand(exp);
+		BigInt biTmp(mansita);
+		res += biTmp.to_dec_str() + ".";
+	}
+	for (int i = 0; i < 7; i++)
+	{
+		string SigStr = A.get_first_nbits_of_significand(16);
+		BigInt BiTmp(SigStr);
+		res += BiTmp.to_dec_str();
+		A.shift_significand_left(16);
+	}
+	return res;
 }

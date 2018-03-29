@@ -23,8 +23,8 @@ int main() {
 	string t = "1100.001";
 	BigFloat a = BigFloat::from_bin_str(t);
 	BigFloat b = 1.0;
-	cout << a.to_bin_str() << endl;
-	cout << a.to_hex_str() << endl;
+//	cout << a.to_bin_str().c_str() << endl;
+	cout << a.to_hex_str().c_str() << endl;
 // 	cout << t << endl;
 // 	cout << b.to_bin_str() << endl;
 // 	cout << (a.to_bin_str() == t) << endl;

@@ -3,7 +3,7 @@
 string BigFloat::to_hex_str() const {
 	if (this->get_bit(127) == 1)
 		return "-" + (-*this).to_hex_str();
-	string bin_str = this->to_bin_str();
+	string bin_str = "";// this->to_bin_str();	//to_bin_str belongs to BigInt????
 	string res = "";
 	int dot = bin_str.find('.');
 	while (dot % 4) {

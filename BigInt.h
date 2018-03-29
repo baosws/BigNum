@@ -12,6 +12,7 @@ public:
 	static BigInt from_dec_str(string);
 	static BigInt from_hex_str(string);
 	static BigInt from_bin_str(string);
+
 	string to_bin_str() const;
 	string to_dec_str() const;
 	string to_hex_str() const;

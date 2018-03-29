@@ -12,6 +12,7 @@ public:
 	static BigFloat from_dec_str(string);
 	static BigFloat from_bin_str(string);
 	static BigFloat from_hex_str(string);
+
 	string to_dec_str() const;
 	string to_bin_str() const;
 	string to_hex_str() const;
