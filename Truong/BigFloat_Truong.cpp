@@ -8,7 +8,7 @@ string BigFloat::to_hex_str() const {
 	if (this->is_nan())
 		return "NaN";
 	BigInt X = this->get_signed_significand();
-	int exp = this->get_exponent() - (FULL_EXPONENT >> 1);
+	int exp = this->get_exponent() - (MAX_EXP >> 1);
 	string res = X.to_hex_str();
 	exp -= 29 - res.length();
 	res.insert(1, ".");
@@ -35,7 +35,7 @@ BigFloat::BigFloat(double other) : BigNum() {
 	this->set_bit(127, (t >> 63) & 1);
 	int exponent = ((t >> 52) & ((1 << 11) - 1)) // get other's exponent
 					- ((1 << 10) - 1)         // get signed value
-					+ (1 << 14) - 1;        // to 15-bias
+					+ ((1 << 14) - 1);        // to 15-bias
 	this->set_exponent(exponent);
 	this->set_significand(BigInt(t & ((1ll << 52) - 1)) << (112 - 52));
 }
@@ -85,7 +85,19 @@ BigFloat BigFloat::from_bin_str(string bin_str) {
 		neg = true;
 		bin_str.erase(0, 1);
 	}
-	
+	int e = bin_str.find('e');
+	if (e == (int)string::npos) {
+		bin_str += "e0";
+		e = bin_str.length() - 2;
+	}
+	string significand = bin_str.substr(0, e);
+	significand.erase(1, 1);
+	while (significand.length() < 113)
+		significand += "0";
+	int exp = (long long)BigInt::from_bin_str(bin_str.substr(e + 1, bin_str.length() - 1 - e));
+	BigFloat res;
+	res.set_exponent(exp + (MAX_EXP >> 1));
+	res.set_significand(BigInt::from_bin_str(significand));
 	if (neg)
 		res = -res;
 	return res;

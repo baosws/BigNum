@@ -12,4 +12,5 @@ using namespace std;
 const int LENGTH_OF_BITS = 128;
 const int MAX_DEC_LENGTH = 39;
 const int MAX_HEX_LENGTH = 32;
-const int FULL_EXPONENT = (1 << 15) - 1;
+const int MAX_EXP = (1 << 15) - 1;
+const int BIAS = MAX_EXP >> 1;

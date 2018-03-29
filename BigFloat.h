@@ -18,6 +18,7 @@ public:
 	
 	static const BigFloat INF;
 	static const BigFloat ZERO;
+	static const BigFloat NaN;
 	
     BigFloat operator+(const BigFloat&) const;
     BigFloat operator-(const BigFloat&) const;
@@ -65,4 +66,6 @@ public:
     operator bool() const;
 private :
 	void add_signed_significands(const BigFloat&X, const BigFloat&Y);
+
+	operator double() const;
 };
