@@ -91,3 +91,74 @@ BigFloat BigFloat::operator-(const BigFloat& other) const
 {
 	return *this + (-other);
 }
+
+
+
+string BigFloat::to_dec_str() const
+{
+	BigFloat A(*this);
+	BigInt nguyen;
+	string res = "";
+	if (this->get_bit(127) == 1)
+		return "-" + (-A).to_dec_str();
+	int exp = A.get_exponent() - (int)pow(2, 14) + 1;//bias value;
+	//
+	if (exp < 0)
+	{
+		res += "0.";
+		for (int i = 0; i < -exp; i++) res += '0';
+	}
+	else
+	{
+		nguyen = BigInt(A);//
+		res += nguyen.to_dec_str() + ".";
+	}
+	BigFloat tmp;
+	string SigStr;
+	for (int i = 0; i < 7; i++)
+	{
+		SigStr = A.get_first_nbits_of_significand(16);
+		tmp = from_another_significand(SigStr);
+		tmp = tmp * BigFloat::POW_2_OF_16;
+		nguyen = BigInt(tmp);
+		res += nguyen.to_dec_str();
+		A.shift_significand_left(16);
+	}
+	return res;
+}
+
+void BigFloat::shift_significand_left(int n)
+{
+	BigInt biNum = this->get_significand();
+	biNum = biNum << n;
+	this->set_significand(biNum);
+}
+
+/*Return the first n-bit string of BigFloat's significand area*/
+string BigFloat::get_first_nbits_of_significand(int n)
+{
+	string res = "";
+	for (int i = 0; i < n; i++)
+		res += this->get_bit(111 - i) - 48;
+	return res;
+}
+/*Convert a binary string to BigFloat store
+-Input: Binary String
+- Ouput: A BigFloat
+	Exp: "000010101000" -> BigFloat: 0|2^14-1 - 5|0101000
+*/
+BigFloat from_another_significand(string binStr)
+{
+	BigFloat res = (0.0);
+	int idx = binStr.find_first_of('1');
+	if (idx < 112)
+	{
+		unsigned short exp = -(idx+1) + 16383;//exp = -(idx+1)+2^14-1;
+		res.set_exponent(exp);
+		for (int i = 0; i <= idx; i++)
+			binStr.erase(binStr.begin()+0);
+		for (int i = 0; i < binStr.length(); i++)
+			res.set_bit(111 - i, binStr[i] - 48);
+	}
+	return res;
+}
