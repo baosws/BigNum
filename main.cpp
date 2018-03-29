@@ -19,16 +19,17 @@
 //	}
 //}
 
-int main() {
+int test2() {
 	string t = "1.1";
-	BigFloat a = -313.0;
-	BigFloat b = BigFloat::from_dec_str("1.3e1");
-	cout << "a: " << a.to_bin_str() << endl;
-	cout << "b: " << b.to_bin_str() << endl;
-	cout << (a / b).to_bin_str() << endl;
+	BigFloat a = 313.0;
+	BigFloat b = BigFloat::from_dec_str("1.3231e4");
+// 	cout << "a: " << a.to_bin_str() << endl;
+// 	cout << "b: " << b.to_bin_str() << endl;
+// 	cout << (a / b).to_bin_str() << endl;
 // 	cout << (a * b).to_bin_str() << endl;
 // 	cout << (a + b).to_bin_str() << endl;
 // 	cout << BigFloat::ZERO.to_hex_str() << endl;
+// 	cout << ((b / a).operator BigInt()).to_dec_str() << endl;
 // =======
 // 	string st = "012345679";
 // 	st.erase(st.begin()+3);
@@ -45,4 +46,37 @@ int main() {
 //=======
 // 	string t = "-1.00101e-1111111111111";
 	return 0;
+}
+void binary_operator_process(vector<string> args) {
+	if (is_float(args[1]) || is_float(arg[3])) {
+	}
+	else
+	{
+	}
+}
+void process(vector<string> args) {
+	if (args.size() == 4)
+		binary_operator_process(args);
+	else
+		if (args.size() == 3) {
+			if (arg[1] == '~') {
+				// sdfas
+			}
+			else
+				change_base(args);
+		}
+}
+int main() {
+	int n;
+	cin >> n;
+	while (n--) {
+		string line;
+		std::getline(cin, line);
+		stringstream parser(line);
+		string arg;
+		vector<string> args;
+		while (parser >> arg)
+			args.push_back(arg);
+		process(args);
+	}
 }

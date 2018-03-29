@@ -94,38 +94,38 @@ BigFloat BigFloat::operator-(const BigFloat& other) const
 
 
 
-string BigFloat::to_dec_str() const
-{
-	BigFloat A(*this);
-	BigInt nguyen;
-	string res = "";
-	if (this->get_bit(127) == 1)
-		return "-" + (-A).to_dec_str();
-	int exp = A.get_exponent() - (int)pow(2, 14) + 1;//bias value;
-	//
-	if (exp < 0)
-	{
-		res += "0.";
-		for (int i = 0; i < -exp; i++) res += '0';
-	}
-	else
-	{
-		nguyen = BigInt(A);//
-		res += nguyen.to_dec_str() + ".";
-	}
-	BigFloat tmp;
-	string SigStr;
-	for (int i = 0; i < 7; i++)
-	{
-		SigStr = A.get_first_nbits_of_significand(16);
-		tmp = from_another_significand(SigStr);
-		tmp = tmp * BigFloat::POW_2_OF_16;
-		nguyen = BigInt(tmp);
-		res += nguyen.to_dec_str();
-		A.shift_significand_left(16);
-	}
-	return res;
-}
+// string BigFloat::to_dec_str() const
+// {
+// 	BigFloat A(*this);
+// 	BigInt nguyen;
+// 	string res = "";
+// 	if (this->get_bit(127) == 1)
+// 		return "-" + (-A).to_dec_str();
+// 	int exp = A.get_exponent() - BIAS;//bias value;
+// 	//
+// 	if (exp < 0)
+// 	{
+// 		res += "0.";
+// 		for (int i = 0; i < -exp; i++) res += '0';
+// 	}
+// 	else
+// 	{
+// 		nguyen = A.operator BigInt();//
+// 		res += nguyen.to_dec_str() + ".";
+// 	}
+// 	BigFloat tmp;
+// 	string SigStr;
+// 	for (int i = 0; i < 7; i++)
+// 	{
+// 		SigStr = A.get_first_nbits_of_significand(16);
+// 		tmp = from_another_significand(SigStr);
+// 		tmp = tmp * BigFloat::POW_2_OF_16;
+// 		nguyen = BigInt(tmp);
+// 		res += nguyen.to_dec_str();
+// 		A.shift_significand_left(16);
+// 	}
+// 	return res;
+// }
 
 void BigFloat::shift_significand_left(int n)
 {

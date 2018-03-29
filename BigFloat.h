@@ -66,6 +66,7 @@ public:
     bool operator>=(const BigFloat&) const;
 
     operator bool() const;
+	operator BigInt() const;
 private :
 	void add_signed_significands(const BigFloat&X, const BigFloat&Y);
 

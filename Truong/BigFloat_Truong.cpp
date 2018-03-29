@@ -5,31 +5,19 @@ string BigFloat::to_hex_str() const {
 		return "-" + (-*this).to_bin_str();
 	if (this->is_zero())
 		return "0.0";
-	string bin_str = this->to_bin_str();
-	string res = "";
-	int dot = bin_str.find('.');
-	while (dot % 4) {
-		bin_str = '0' + bin_str;
-		dot++;
-	}
-	while ((bin_str.length() - 1 - dot) % 4)
-		bin_str = bin_str + '0';
-	for (int i = 0; i < (int)bin_str.length(); i += 4)
-		if (bin_str[i] != '.') {
-			int temp= (int(bin_str[i]-48)<<3) +
-						(int(bin_str[i+1]-48)<<2) +
-						(int(bin_str[i+2]-48)<<1) +
-						(int(bin_str[i+3]-48));
-			res+= char(temp<10 ? temp + '0' : temp - 10 + 'A');
-		}
-		else {
-			res += '.';
-			i -= 3;
-		}
+	if (this->is_inf())
+		return "INF";
+	if (this->is_nan())
+		return "NaN";
+	if (this->get_bit(127) == 1)
+		return "-" + (-*this).to_bin_str();
+	if (this->is_zero())
+		return "0.0";
+	string res;
 	BigInt X = this->get_signed_significand();
-	int exp = this->get_exponent() - (MAX_EXP >> 1);
+	int exp = this->get_exponent() - BIAS;
 	res = X.to_hex_str();
-	exp -= 29 - res.length();
+// 	exp -= 29 - res.length();
 	res.insert(1, ".");
 	while (res.back() == '0' && res[res.length() - 2] != '.')
 		res.erase(res.length() - 1, 1);

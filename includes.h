@@ -5,6 +5,9 @@
 #include <utility>
 #include <tuple>
 #include <algorithm>
+#include <cmath>
+#include <sstream>
+#include <vector>
 using namespace std;
 #include "BigNum.h"
 #include "BigInt.h"
