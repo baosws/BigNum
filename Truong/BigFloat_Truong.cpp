@@ -3,6 +3,7 @@
 string BigFloat::to_hex_str() const {
 	if (this->get_bit(127) == 1)
 		return "-" + (-*this).to_hex_str();
+<<<<<<< HEAD
 	string bin_str = "";// this->to_bin_str();	//to_bin_str belongs to BigInt????
 	string res = "";
 	int dot = bin_str.find('.');
@@ -24,8 +25,20 @@ string BigFloat::to_hex_str() const {
 			res += '.';
 			i -= 3;
 		}
+=======
+	if (this->is_inf())
+		return "INF";
+	if (this->is_nan())
+		return "NaN";
+	BigInt X = this->get_signed_significand();
+	int exp = this->get_exponent() - (MAX_EXP >> 1);
+	string res = X.to_hex_str();
+	exp -= 29 - res.length();
+	res.insert(1, ".");
+>>>>>>> refs/remotes/origin/master
 	while (res.back() == '0' && res[res.length() - 2] != '.')
 		res.erase(res.length() - 1, 1);
+	res = res + "e" + BigInt(exp).to_hex_str();
 	return res;
 }
 
@@ -46,7 +59,7 @@ BigFloat::BigFloat(double other) : BigNum() {
 	this->set_bit(127, (t >> 63) & 1);
 	int exponent = ((t >> 52) & ((1 << 11) - 1)) // get other's exponent
 					- ((1 << 10) - 1)         // get signed value
-					+ (1 << 14) - 1;        // to 15-bias
+					+ ((1 << 14) - 1);        // to 15-bias
 	this->set_exponent(exponent);
 	this->set_significand(BigInt(t & ((1ll << 52) - 1)) << (112 - 52));
 }
@@ -96,23 +109,20 @@ BigFloat BigFloat::from_bin_str(string bin_str) {
 		neg = true;
 		bin_str.erase(0, 1);
 	}
-	int dot = bin_str.find('.');
-	if (dot == (int)string::npos) {
-		bin_str += ".0";
-		dot = bin_str.length() - 2;
+	int e = bin_str.find('e');
+	if (e == (int)string::npos) {
+		bin_str += "e0";
+		e = bin_str.length() - 2;
 	}
-	int one = bin_str.find('1');
-	if (one < dot)
-		bin_str.erase(dot, 1);
+	string significand = bin_str.substr(0, e);
+	significand.erase(1, 1);
+	while (significand.length() < 113)
+		significand += "0";
+	int exp = (long long)BigInt::from_bin_str(bin_str.substr(e + 1, bin_str.length() - 1 - e));
 	BigFloat res;
-	int exp = (one < dot ? dot - one - 1 : dot - one) + (FULL_EXPONENT >> 1);
-	if (exp < 1) {
-		one = bin_str.length() - 113;
-		exp = 0;
-	}
-	res.set_exponent(exp);
-	int n = bin_str.length();
-	for (int i = one + 1; i < n && i < one + 113; ++i)
-	   res.set_bit(112 + one - i, bin_str[i] == '1');
+	res.set_exponent(exp + (MAX_EXP >> 1));
+	res.set_significand(BigInt::from_bin_str(significand));
+	if (neg)
+		res = -res;
 	return res;
 }
