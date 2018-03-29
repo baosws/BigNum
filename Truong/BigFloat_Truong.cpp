@@ -3,29 +3,18 @@
 string BigFloat::to_hex_str() const {
 	if (this->get_bit(127) == 1)
 		return "-" + (-*this).to_hex_str();
-	string bin_str = this->to_bin_str();
-	string res = "";
-	int dot = bin_str.find('.');
-	while (dot % 4) {
-		bin_str = '0' + bin_str;
-		dot++;
-	}
-	while ((bin_str.length() - 1 - dot) % 4)
-		bin_str = bin_str + '0';
-	for (int i = 0; i < (int)bin_str.length(); i += 4)
-		if (bin_str[i] != '.') {
-			int temp= (int(bin_str[i]-48)<<3) +
-						(int(bin_str[i+1]-48)<<2) +
-						(int(bin_str[i+2]-48)<<1) +
-						(int(bin_str[i+3]-48));
-			res+= char(temp<10 ? temp + '0' : temp - 10 + 'A');
-		}
-		else {
-			res += '.';
-			i -= 3;
-		}
+	if (this->is_inf())
+		return "INF";
+	if (this->is_nan())
+		return "NaN";
+	BigInt X = this->get_signed_significand();
+	int exp = this->get_exponent() - (FULL_EXPONENT >> 1);
+	string res = X.to_hex_str();
+	exp -= 29 - res.length();
+	res.insert(1, ".");
 	while (res.back() == '0' && res[res.length() - 2] != '.')
 		res.erase(res.length() - 1, 1);
+	res = res + "e" + BigInt(exp).to_hex_str();
 	return res;
 }
 
@@ -96,23 +85,8 @@ BigFloat BigFloat::from_bin_str(string bin_str) {
 		neg = true;
 		bin_str.erase(0, 1);
 	}
-	int dot = bin_str.find('.');
-	if (dot == (int)string::npos) {
-		bin_str += ".0";
-		dot = bin_str.length() - 2;
-	}
-	int one = bin_str.find('1');
-	if (one < dot)
-		bin_str.erase(dot, 1);
-	BigFloat res;
-	int exp = (one < dot ? dot - one - 1 : dot - one) + (FULL_EXPONENT >> 1);
-	if (exp < 1) {
-		one = bin_str.length() - 113;
-		exp = 0;
-	}
-	res.set_exponent(exp);
-	int n = bin_str.length();
-	for (int i = one + 1; i < n && i < one + 113; ++i)
-	   res.set_bit(112 + one - i, bin_str[i] == '1');
+	
+	if (neg)
+		res = -res;
 	return res;
 }

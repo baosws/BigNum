@@ -20,7 +20,7 @@
 //}
 
 int main() {
-	string t = "1100.001";
+	string t = "-0.001e-11111111111111111";
 	BigFloat a = BigFloat::from_bin_str(t);
 	BigFloat b = 1.0;
 	cout << a.to_bin_str() << endl;
