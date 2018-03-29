@@ -4,6 +4,7 @@
 #include <iostream>
 #include <utility>
 #include <tuple>
+#include <algorithm>
 using namespace std;
 #include "BigNum.h"
 #include "BigInt.h"

@@ -132,52 +132,24 @@ BigInt BigInt::operator<<(int amountBits) const
 	return res;
 }
 
-bool BigInt::operator < (const BigInt &another) const 
+bool BigInt::operator < (const BigInt& other) const 
 {
-	int sub = this->get_bit(127) - another.get_bit(127);
-	
-	switch (sub)
-	{
-	case 1:				//*this < 0 && another > 0
-		return true;
-	
-	case -1:			//*this > 0 && another < 0 
-		return false;
-	
-	default:
-		if (this->operator==(another))
-			return false;
-
-		for (int i = 126; i >= 0; i--)
-			if (this->get_bit(i) > another.get_bit(i))
-				return false;
-		
-	}
-	return true;
+	if (this->get_bit(127) != other.get_bit(127))
+		return this->get_bit(127) == 1;
+	for (int i = LENGTH_OF_BITS - 1; i >= 0; --i)
+		if (this->get_bit(i) != other.get_bit(i))
+			return this->get_bit(i) < other.get_bit(i);
+	return false;
 }
 
-bool BigInt::operator > (const BigInt &another) const
+bool BigInt::operator > (const BigInt &other) const
 {
-	int sub = this->get_bit(127) - another.get_bit(127);
-
-	switch (sub)
-	{
-	case 1:				//*this < 0 && another > 0
-		return false;
-
-	case -1:			//*this > 0 && another < 0 
-		return true;
-
-	default:
-		if (this->operator==(another))
-			return false;
-
-		for (int i = 126; i >= 0; i--)
-		if (this->get_bit(i) < another.get_bit(i))
-			return false;
-
-	}
-	return true;
+	if (this->get_bit(127) != other.get_bit(127))
+		return this->get_bit(127) == 0;
+	for (int i = LENGTH_OF_BITS - 1; i >= 0; --i)
+		if (this->get_bit(i) != other.get_bit(i))
+			return this->get_bit(i) > other.get_bit(i);
+	return false;
 }
 
 bool BigInt::operator==(int other) const {

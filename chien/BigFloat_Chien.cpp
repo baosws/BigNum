@@ -49,6 +49,11 @@ BigFloat BigFloat::operator+(const BigFloat& other) const {
 		if (Y == (BigInt)0)
 			return *this;
 	}
+	if (this->to_bin_str() == "1.101e11") {
+		cout << "opt +\n";
+		cout << "X: " << X.to_bin_str() << endl;
+		cout << "Y: " << Y.to_bin_str() << endl;
+	}
 	BigFloat res;
 	BigInt Z = X + Y;
 	if (Z.get_bit(127) == 1) {

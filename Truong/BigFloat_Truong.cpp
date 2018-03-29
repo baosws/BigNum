@@ -2,7 +2,9 @@
 
 string BigFloat::to_hex_str() const {
 	if (this->get_bit(127) == 1)
-		return "-" + (-*this).to_hex_str();
+		return "-" + (-*this).to_bin_str();
+	if (this->is_zero())
+		return "0.0";
 	if (this->is_inf())
 		return "INF";
 	if (this->is_nan())
@@ -76,27 +78,27 @@ void BigFloat::set_significand(const BigInt & sig) {
 }
 
 BigFloat BigFloat::from_bin_str(string bin_str) {
-	if (bin_str == "0.0")
-		return BigFloat::ZERO;
-	if (bin_str == "INF")
-		return BigFloat::INF;
+	std::transform(bin_str.begin(), bin_str.end(), bin_str.begin(), ::tolower);
 	bool neg = false;
 	if (bin_str[0] == '-') {
 		neg = true;
 		bin_str.erase(0, 1);
 	}
+	if (bin_str == "0.0")
+		return BigFloat::ZERO;
+	if (bin_str == "inf")
+		return BigFloat::INF;
+	if (bin_str == "nan")
+		return BigFloat::NaN;
+	
 	int e = bin_str.find('e');
-	if (e == (int)string::npos) {
-		bin_str += "e0";
-		e = bin_str.length() - 2;
-	}
 	string significand = bin_str.substr(0, e);
 	significand.erase(1, 1);
 	while (significand.length() < 113)
 		significand += "0";
 	int exp = (long long)BigInt::from_bin_str(bin_str.substr(e + 1, bin_str.length() - 1 - e));
 	BigFloat res;
-	res.set_exponent(exp + (MAX_EXP >> 1));
+	res.set_exponent(exp + BIAS);
 	res.set_significand(BigInt::from_bin_str(significand));
 	if (neg)
 		res = -res;
