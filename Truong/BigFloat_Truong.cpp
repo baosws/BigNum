@@ -3,7 +3,7 @@
 string BigFloat::to_hex_str() const {
 	if (this->get_bit(127) == 1)
 		return "-" + (-*this).to_hex_str();
-<<<<<<< HEAD
+//<<<<<<< HEAD
 	string bin_str = "";// this->to_bin_str();	//to_bin_str belongs to BigInt????
 	string res = "";
 	int dot = bin_str.find('.');
@@ -25,17 +25,17 @@ string BigFloat::to_hex_str() const {
 			res += '.';
 			i -= 3;
 		}
-=======
+//=======
 	if (this->is_inf())
 		return "INF";
 	if (this->is_nan())
 		return "NaN";
 	BigInt X = this->get_signed_significand();
 	int exp = this->get_exponent() - (MAX_EXP >> 1);
-	string res = X.to_hex_str();
+	res = X.to_hex_str();
 	exp -= 29 - res.length();
 	res.insert(1, ".");
->>>>>>> refs/remotes/origin/master
+//>>>>>>> refs/remotes/origin/master
 	while (res.back() == '0' && res[res.length() - 2] != '.')
 		res.erase(res.length() - 1, 1);
 	res = res + "e" + BigInt(exp).to_hex_str();

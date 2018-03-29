@@ -3,6 +3,7 @@
 const BigFloat BigFloat::INF = BigFloat((bool*)(BigInt(MAX_EXP) << 112));
 const BigFloat BigFloat::ZERO = BigFloat(0.0);
 const BigFloat BigFloat::NaN = BigFloat((bool*)((BigInt(MAX_EXP) << 112) + (BigInt)1));
+const BigFloat BigFloat::POW_2_OF_16 = BigFloat((double)pow(2, 16));
 
 bool BigFloat::operator==(const BigFloat& p) const {
 	return this->data[0] == p.data[0]
