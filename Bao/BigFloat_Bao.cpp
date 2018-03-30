@@ -55,46 +55,43 @@ BigFloat& BigFloat::operator=(const BigFloat& other) {
 	return *this;
 }
 
+// so sánh bé hơn
 bool BigFloat::operator<(const BigFloat& other) const {
 	BigInt X = this->get_signed_significand();
 	BigInt Y = other.get_signed_significand();
 	int x = this->get_exponent();
 	int y = other.get_exponent();
-	while (x < y) {
-		++x;
-		X = X >> 1;
-	}
-	while (y < x) {
-		++y;
-		Y = Y >> 1;
-	}
+	if (x < y)
+		X = X >> (y - x);
+	if (y < x)
+		Y = Y >> (x - y);
 	return X < Y;
 }
 
+// so sánh lớn hơn
 bool BigFloat::operator>(const BigFloat& other) const {
 	BigInt X = this->get_signed_significand();
 	BigInt Y = other.get_signed_significand();
 	int x = this->get_exponent();
 	int y = other.get_exponent();
-	while (x < y) {
-		x++;
-		X = X >> 1;
-	}
-	while (y < x) {
-		y++;
-		Y = Y >> 1;
-	}
+	if (x < y)
+		X = X >> (y - x);
+	if (y < x)
+		Y = Y >> (x - y);
 	return X > Y;
 }
 
+// so sánh nhỏ hơn hoặc bằng
 bool BigFloat::operator<=(const BigFloat& p) const {
 	return !(*this > p);
 }
 
+// so sánh lớn hơn hoặc bằng
 bool BigFloat::operator>=(const BigFloat& p) const {
 	return !(*this < p);
 }
 
+// phép nhân
 BigFloat BigFloat::operator*(const BigFloat& other) const {
 	if (this->is_nan() || other.is_nan())
 		return BigFloat::NaN;
@@ -125,6 +122,7 @@ BigFloat BigFloat::operator*(const BigFloat& other) const {
 	return res;
 }
 
+// phép chia
 BigFloat BigFloat::operator/(const BigFloat& divisor) const {
 	if (this->is_nan() || divisor.is_nan())
 		return BigFloat::NaN;
@@ -173,6 +171,7 @@ BigFloat BigFloat::operator/(const BigFloat& divisor) const {
 	return res;
 }
 
+// chuyển thành chuỗi nhị phân
 string BigFloat::to_bin_str() const {
 	if (this->get_bit(127) == 1)
 		return "-" + (-*this).to_bin_str();
@@ -193,6 +192,7 @@ string BigFloat::to_bin_str() const {
 	return res;
 }
 
+// chuyển từ chuỗi hexa
 BigFloat BigFloat::from_hex_str(string hex_str) {
 	bool neg = false;
 	if (hex_str[0] == '-') {
@@ -220,6 +220,7 @@ BigFloat BigFloat::from_hex_str(string hex_str) {
 	return BigFloat::from_bin_str(bin_str);
 }
 
+// chuyển từ chuỗi thập phân
 BigFloat BigFloat::from_dec_str(string dec_str) {
 	std::transform(dec_str.begin(), dec_str.end(), dec_str.begin(), ::tolower);
 	bool neg = false;
@@ -268,6 +269,7 @@ BigFloat BigFloat::from_dec_str(string dec_str) {
 	return res;
 }
 
+// lấy phần nguyên
 BigFloat::operator BigInt() const {
 	if (*this < BigFloat::ZERO)
 		return -((-*this).operator BigInt());

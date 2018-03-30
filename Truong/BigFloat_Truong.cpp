@@ -1,5 +1,6 @@
 #include "../includes.h"
 
+// chuyển thành chuỗi hexa
 string BigFloat::to_hex_str() const {
 	if (this->get_bit(127) == 1)
 		return "-" + (-*this).to_bin_str();
@@ -25,6 +26,7 @@ string BigFloat::to_hex_str() const {
 	return res;
 }
 
+// khởi tạo từ mảng bool
 BigFloat::BigFloat(const bool * const other) {
 	for (int i = 0; i < LENGTH_OF_BITS; i++)
 	{
@@ -32,11 +34,13 @@ BigFloat::BigFloat(const bool * const other) {
 	}
 }
 
+// khởi tạo copy
 BigFloat::BigFloat(const BigFloat & other) {
 	this->data[0] = other.data[0];
 	this->data[1] = other.data[1];
 }
 
+// khởi tạo từ double
 BigFloat::BigFloat(double other) : BigNum() {
 	if (other == 0.0) {
 		*this = BigFloat::ZERO;
@@ -51,6 +55,7 @@ BigFloat::BigFloat(double other) : BigNum() {
 	this->set_significand(BigInt(t & ((1ll << 52) - 1)) << (112 - 52));
 }
 
+// lấy phần mũ, ở dạng số BIAS, nếu là số không chuẩn thì trả về 1 thay vì 0
 unsigned short BigFloat::get_exponent() const
 {
 	if (this->is_zero())
@@ -86,6 +91,7 @@ void BigFloat::set_significand(const BigInt & sig) {
 	}
 }
 
+// chuyển từ chuỗi nhị phân
 BigFloat BigFloat::from_bin_str(string bin_str) {
 	std::transform(bin_str.begin(), bin_str.end(), bin_str.begin(), ::tolower);
 	bool neg = false;

@@ -112,8 +112,6 @@ void process(const vector<string>& args) {
 	cout << endl;
 }
 int main(int nargs, char* args[]) {
-	cout << ((BigFloat)0.1).to_dec_str() << endl;
-	return 0;
 	freopen(args[1], "r", stdin);
 	freopen(args[2], "w", stdout);
 	string line;

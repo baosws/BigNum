@@ -1,20 +1,29 @@
 #include "../includes.h"
 
+// kiểm tra số không chuẩn
 bool BigFloat::is_denormalized() const {
 	return this->get_exponent() == 1;
 }
+
+// kiểm tra số zero
 bool BigFloat::is_zero() const { // should not call get_exponent here (inf recursion)
 	return this->data[0] == 0
 		&& (this->data[1] << 1) == 0; // exclude the sign bit
 }
+
+// kiểm tra số vô cực
 bool BigFloat::is_inf() const {
 	return this->get_exponent() == MAX_EXP
 		&& this->get_significand() == (BigInt)0;
 }
+
+// kiểm tra số nan
 bool BigFloat::is_nan() const {
 	return this->get_exponent() == MAX_EXP
 		&& this->get_significand() != (BigInt)0;
 }
+
+// kiểm tra số chuẩn
 bool BigFloat::is_normalized() const {
 	return !this->is_denormalized()
 		&& !this->is_inf()
@@ -22,6 +31,7 @@ bool BigFloat::is_normalized() const {
 		&& !this->is_zero();
 }
 
+// lấy phần trị, kèm theo số 1 (1.xxx, nếu có), ở dạng số có dấu
 BigInt BigFloat::get_signed_significand() const {
 	BigInt sig = this->get_significand();
 	if (this->is_normalized())
@@ -31,7 +41,7 @@ BigInt BigFloat::get_signed_significand() const {
 	return sig;
 }
 
-// too many cases, needs to be optimized
+// phép cộng
 BigFloat BigFloat::operator+(const BigFloat& other) const {
 	BigInt X = this->get_signed_significand();
 	BigInt Y = other.get_signed_significand();
@@ -74,6 +84,7 @@ BigFloat BigFloat::operator+(const BigFloat& other) const {
 	return res;
 }
 
+// phép lấy số đối
 BigFloat BigFloat::operator-() const {
 	if (this->is_zero())
 		return *this;
@@ -81,26 +92,14 @@ BigFloat BigFloat::operator-() const {
 	res.set_bit(127, 1 ^ res.get_bit(127));
 	return res;
 }
+
+// phép trừ
 BigFloat BigFloat::operator-(const BigFloat& other) const
 {
 	return *this + (-other);
 }
 
-BigFloat from_another_significand(string binStr)
-{
-	BigFloat res = BigFloat::ZERO;
-	int idx = binStr.find_first_of('1');
-	if (idx < 112 && idx !=-1)
-	{
-		unsigned short exp = -(idx+1) + 16383;//exp = -(idx+1)+2^14-1;
-		res.set_exponent(exp);
-		for (int i = 0; i <= idx; i++)
-			binStr.erase(binStr.begin()+0);
-		for (int i = 0; i < (int)binStr.length(); i++)
-			res.set_bit(111 - i, binStr[i] - 48);
-	}
-	return res;
-}
+// chuyển thành chuỗi thập phân
 string BigFloat::to_dec_str() const
 {
 	if (this->get_bit(127) == 1)
