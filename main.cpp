@@ -62,7 +62,7 @@ string float_operator(const string& opr1, const string& opr2, const string& opt,
 		if (opr2 != "")
 			b = BigFloat::from_bin_str(opr2);
 	}
-	
+
 	if (src_base == "10") {
 		a = BigFloat::from_dec_str(opr1);
 		if (opr2 != "")
