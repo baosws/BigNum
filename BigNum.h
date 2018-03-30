@@ -12,8 +12,9 @@ public:
     BigNum();
 	//Constructor khởi tạo từ một mảng bool chứa các giá trị nhị phân
     BigNum(const bool* const);
+	
 	//Hàm gán giá trị theo từng vị trí bit
-    virtual void set_bit(int, bool);
+    void set_bit(int, bool);
 	//Lấy giá trị bit tại một vị trí
-    virtual bool get_bit(int) const;
+    bool get_bit(int) const;
 };
