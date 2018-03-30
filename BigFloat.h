@@ -3,10 +3,10 @@
 
 class BigFloat : public BigNum {
 public:
-	BigFloat(const bool* const);
+	BigFloat(const bool* const bits);
 	BigFloat(const BigFloat&);
 	BigFloat(double);
-	BigFloat(float);
+	BigFloat(BigInt);
 	BigFloat() :BigNum(){}
 
 	static BigFloat from_dec_str(string);

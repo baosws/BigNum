@@ -113,6 +113,25 @@ void process(const vector<string>& args) {
 	cout << endl;
 }
 int main(int nargs, char* args[]) {
+	{
+		string t = "-1.234123e-9";
+// 		BigFloat a = BigFloat::from_dec_str(t);
+// 		BigFloat b = BigFloat::from_dec_str("-1234.123e-12");
+// 		BigFloat a = 1.234123;
+// 		BigFloat b = 0.1;
+// 		cout << a.to_dec_str() << endl;
+// 		cout << b.to_dec_str() << endl;
+// 		cout << ((BigFloat)1.0 / (BigFloat(10.0))).to_dec_str() << endl;
+// 		cout << b.to_bin_str().length() << endl;
+// 		cout << b.to_dec_str() << endl;
+// 		cout << (a * BigFloat::from_dec_str("0.1")).to_dec_str() << endl;
+// 		cout << t << endl;
+		BigFloat ten = 1e-5;
+		BigFloat a = (BigFloat)1.0 / ten;
+// 		cout << ten.to_dec_str() << endl;
+		cout << ten.to_dec_str() << endl;
+		return 0;
+	}
 	freopen(args[1], "r", stdin);
 	freopen(args[2], "w", stdout);
 	string line;

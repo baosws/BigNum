@@ -38,6 +38,10 @@ BigFloat::BigFloat(const BigFloat & other) {
 }
 
 BigFloat::BigFloat(double other) : BigNum() {
+	if (other == 0.0) {
+		*this = BigFloat::ZERO;
+		return;
+	}
 	long long t = *(long long*)&other;
 	this->set_bit(127, (t >> 63) & 1);
 	int exponent = ((t >> 52) & ((1 << 11) - 1)) // get other's exponent

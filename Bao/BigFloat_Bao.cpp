@@ -5,6 +5,29 @@ const BigFloat BigFloat::ZERO = BigFloat();
 const BigFloat BigFloat::NaN = BigFloat((bool*)((BigInt(MAX_EXP) << 112) + (BigInt)1));
 const BigFloat BigFloat::POW_10_OF_16 = BigFloat(pow(10, 16));
 
+BigFloat::BigFloat(BigInt num) {
+	if (num == (BigInt)0) {
+		*this = BigFloat::ZERO;
+		return;
+	}
+	if (num < (BigInt)0) {
+		num = -num;
+		this->set_bit(127, 1);
+	}
+	int exp = 112;
+	while (num >= ((BigInt)1) << 113) {
+		++exp;
+		num = num >> 1;
+	}
+	while (num < ((BigInt)1) << 112) {
+		--exp;
+		num = num << 1;
+	}
+	this->set_exponent(exp + BIAS);
+	this->set_significand(num);
+}
+		
+
 bool BigFloat::operator==(const BigFloat& p) const {
 	return this->data[0] == p.data[0]
 		&& this->data[1] == p.data[1];
@@ -62,8 +85,6 @@ bool BigFloat::operator>=(const BigFloat& p) const {
 BigFloat BigFloat::operator*(const BigFloat& other) const {
 	if (this->is_nan() || other.is_nan())
 		return BigFloat::NaN;
-// 	cout << "this: " << this->to_bin_str() << endl;
-// 	cout << "other: " << other.to_bin_str() << endl;
 	BigFloat res;
 	res.set_bit(127, this->get_bit(127) ^ other.get_bit(127));
 	BigInt X = this->get_signed_significand();
@@ -77,8 +98,6 @@ BigFloat BigFloat::operator*(const BigFloat& other) const {
 		return BigFloat::INF;
 	BigInt A, Q;
 	tie(A, Q) = X.full_multiply(Y);
-// 	cout << "A < 1000...: " << (A < (BigInt(1) << 112)) << endl;
-// 	cout << "A: " << A.to_bin_str() << " " << A.to_bin_str().length() << endl;
 	exp += (128 - 112);
 	while (exp > 1 && A < (BigInt(1) << 112)) {
 		--exp;
@@ -201,13 +220,25 @@ BigFloat BigFloat::from_dec_str(string dec_str) {
 		return BigFloat::INF;
 	if (dec_str == "nan")
 		return BigFloat::NaN;
-
+	while (dec_str[0] == '0' && dec_str[1] != '.')
+		dec_str.erase(0, 1);
+	int dot = dec_str.find('.');
 	int e = dec_str.find('e');
+	if (dot == (int)string::npos) {
+		dec_str.insert(e - 1, ".0");
+		dot = e - 2;
+	}
+	if (e == (int)string::npos) {
+		while (dec_str.back() == '0' && dec_str[dec_str.length() - 2] != '.')
+			dec_str.pop_back();
+		dec_str += "e0";
+		e = dec_str.length() - 2;
+	}
 	string dec_significand = dec_str.substr(0, e);
-	dec_significand.erase(1, 1);
+	dec_significand.erase(dot, 1);
 	int dec_exp = (long long)BigInt::from_dec_str(dec_str.substr(e + 1, dec_str.length() - 1 - e));
-	dec_exp -= (e - 2);
-	BigFloat res, ten = 10.0;
+	dec_exp -= (e - dot - 1);
+	BigFloat res, ten = 10.0, one_ten = (BigFloat)1.0 / ten;
 	for (int i = 0; i < (int)dec_significand.length(); ++i) {
 		res = res * ten + (BigFloat)(double)(dec_significand[i] - '0');
 	}
@@ -217,8 +248,10 @@ BigFloat BigFloat::from_dec_str(string dec_str) {
 	}
 	while (dec_exp < 0) {
 		++dec_exp;
-		res = res / ten;
+		res = res * one_ten;
 	}
+	if (neg)
+		res = -res;
 	return res;
 }
 
