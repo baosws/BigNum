@@ -11,6 +11,6 @@ public:
 
     BigNum();
     BigNum(const bool* const);
-    virtual void set_bit(int, bool);
-    virtual bool get_bit(int) const;
+    void set_bit(int, bool);
+    bool get_bit(int) const;
 };
