@@ -8,11 +8,11 @@ bool BigFloat::is_zero() const { // should not call get_exponent here (inf recur
 		&& (this->data[1] << 1) == 0; // exclude the sign bit
 }
 bool BigFloat::is_inf() const {
-	return this->get_exponent() == FULL_EXPONENT
+	return this->get_exponent() == MAX_EXP
 		&& this->get_significand() == (BigInt)0;
 }
 bool BigFloat::is_nan() const {
-	return this->get_exponent() == FULL_EXPONENT
+	return this->get_exponent() == MAX_EXP
 		&& this->get_significand() != (BigInt)0;
 }
 bool BigFloat::is_normalized() const {
@@ -38,16 +38,21 @@ BigFloat BigFloat::operator+(const BigFloat& other) const {
 	int x = this->get_exponent();
 	int y = other.get_exponent();
 	while (x < y) {
-		x++;
+		++x;
 		X = X >> 1;
 		if (X == (BigInt)0)
 			return other;
 	}
 	while (y < x) {
-		y++;
+		++y;
 		Y = Y >> 1;
 		if (Y == (BigInt)0)
 			return *this;
+	}
+	if (this->to_bin_str() == "1.101e11") {
+		cout << "opt +\n";
+		cout << "X: " << X.to_bin_str() << endl;
+		cout << "Y: " << Y.to_bin_str() << endl;
 	}
 	BigFloat res;
 	BigInt Z = X + Y;
@@ -56,11 +61,11 @@ BigFloat BigFloat::operator+(const BigFloat& other) const {
 		res.set_bit(127, 1);
 	}
 	auto get_high_bytes = [] (BigInt& Z) {return (long long)(Z >> 112) & ((1 << 16) - 1);};
-	while (x < FULL_EXPONENT && get_high_bytes(Z) > 1) {
+	while (x < MAX_EXP && get_high_bytes(Z) > 1) {
 		++x;
 		Z = Z >> 1;
 	}
-	if (x == FULL_EXPONENT && get_high_bytes(Z) > 1)
+	if (x == MAX_EXP && get_high_bytes(Z) > 1)
 		return BigFloat::INF;
 	while (x > 1 && get_high_bytes(Z) == 0) {
 		--x;
@@ -85,4 +90,75 @@ BigFloat BigFloat::operator-() const {
 BigFloat BigFloat::operator-(const BigFloat& other) const
 {
 	return *this + (-other);
+}
+
+
+
+// string BigFloat::to_dec_str() const
+// {
+// 	BigFloat A(*this);
+// 	BigInt nguyen;
+// 	string res = "";
+// 	if (this->get_bit(127) == 1)
+// 		return "-" + (-A).to_dec_str();
+// 	int exp = A.get_exponent() - BIAS;//bias value;
+// 	//
+// 	if (exp < 0)
+// 	{
+// 		res += "0.";
+// 		for (int i = 0; i < -exp; i++) res += '0';
+// 	}
+// 	else
+// 	{
+// 		nguyen = A.operator BigInt();//
+// 		res += nguyen.to_dec_str() + ".";
+// 	}
+// 	BigFloat tmp;
+// 	string SigStr;
+// 	for (int i = 0; i < 7; i++)
+// 	{
+// 		SigStr = A.get_first_nbits_of_significand(16);
+// 		tmp = from_another_significand(SigStr);
+// 		tmp = tmp * BigFloat::POW_2_OF_16;
+// 		nguyen = BigInt(tmp);
+// 		res += nguyen.to_dec_str();
+// 		A.shift_significand_left(16);
+// 	}
+// 	return res;
+// }
+
+void BigFloat::shift_significand_left(int n)
+{
+	BigInt biNum = this->get_significand();
+	biNum = biNum << n;
+	this->set_significand(biNum);
+}
+
+/*Return the first n-bit string of BigFloat's significand area*/
+string BigFloat::get_first_nbits_of_significand(int n)
+{
+	string res = "";
+	for (int i = 0; i < n; i++)
+		res += this->get_bit(111 - i) - 48;
+	return res;
+}
+/*Convert a binary string to BigFloat store
+-Input: Binary String
+- Ouput: A BigFloat
+	Exp: "000010101000" -> BigFloat: 0|2^14-1 - 5|0101000
+*/
+BigFloat from_another_significand(string binStr)
+{
+	BigFloat res = (0.0);
+	int idx = binStr.find_first_of('1');
+	if (idx < 112)
+	{
+		unsigned short exp = -(idx+1) + 16383;//exp = -(idx+1)+2^14-1;
+		res.set_exponent(exp);
+		for (int i = 0; i <= idx; i++)
+			binStr.erase(binStr.begin()+0);
+		for (int i = 0; i < binStr.length(); i++)
+			res.set_bit(111 - i, binStr[i] - 48);
+	}
+	return res;
 }
