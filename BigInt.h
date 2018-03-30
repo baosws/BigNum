@@ -37,14 +37,6 @@ public:
     
     BigInt& operator=(const BigInt&);
 
-    BigInt& operator&=(const BigInt&);
-    BigInt& operator|=(const BigInt&);
-    BigInt& operator^=(const BigInt&);
-    BigInt& operator<<=(int);
-    BigInt& operator>>=(int);
-
-	bool operator==(int other) const;
-
     bool operator==(const BigInt&) const;
     bool operator!=(const BigInt&) const;
     bool operator<(const BigInt&) const;

@@ -92,6 +92,7 @@ BigFloat BigFloat::operator-(const BigFloat& other) const
 	return *this + (-other);
 }
 
+<<<<<<< HEAD
  string BigFloat::to_dec_str() const
  {
  	BigFloat A(*this);
@@ -125,6 +126,43 @@ BigFloat BigFloat::operator-(const BigFloat& other) const
  	}
  	return res;
  }
+=======
+
+
+string BigFloat::to_dec_str() const
+{
+	return "fuck u";
+// 	BigFloat A(*this);
+// 	BigInt nguyen;
+// 	string res = "";
+// 	if (this->get_bit(127) == 1)
+// 		return "-" + (-A).to_dec_str();
+// 	int exp = A.get_exponent() - BIAS;//bias value;
+// 	//
+// 	if (exp < 0)
+// 	{
+// 		res += "0.";
+// 		for (int i = 0; i < -exp; i++) res += '0';
+// 	}
+// 	else
+// 	{
+// 		nguyen = A.operator BigInt();//
+// 		res += nguyen.to_dec_str() + ".";
+// 	}
+// 	BigFloat tmp;
+// 	string SigStr;
+// 	for (int i = 0; i < 7; i++)
+// 	{
+// 		SigStr = A.get_first_nbits_of_significand(16);
+// 		tmp = from_another_significand(SigStr);
+// 		tmp = tmp * BigFloat::POW_2_OF_16;
+// 		nguyen = BigInt(tmp);
+// 		res += nguyen.to_dec_str();
+// 		A.shift_significand_left(16);
+// 	}
+// 	return res;
+}
+>>>>>>> refs/remotes/origin/master
 
 void BigFloat::shift_significand_left(int n)
 {
