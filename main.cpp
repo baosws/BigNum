@@ -112,6 +112,7 @@ void process(const vector<string>& args) {
 	cout << endl;
 }
 int main(int nargs, char* args[]) {
+	int count = 1;
 	freopen(args[1], "r", stdin);
 //	freopen(args[2], "w", stdout);
 	string line;
@@ -122,6 +123,7 @@ int main(int nargs, char* args[]) {
 		while (parser >> arg) {
 			args.push_back(arg);
 		}
+		cout << "*Resul test " << count++ <<": "<< endl;
 		process(args);
 		cout <<  endl;
 	}

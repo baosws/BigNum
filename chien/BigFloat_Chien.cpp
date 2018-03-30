@@ -120,3 +120,17 @@ string BigFloat::to_dec_str() const
 		res.pop_back();
 	return res;
 }
+//Toán tử xuất << ra stream 
+ostream& operator<<(ostream& os, const BigFloat& p) // chien/BigFloat_Chien.cpp
+{
+	os << p.to_dec_str();
+	return os;
+}
+//Toán tử nhập >> vào stream
+istream& operator>>(istream& is, BigFloat& p) // chien/BigFloat_Chien.cpp
+{
+	string s;
+	is >> s;
+	p = BigFloat::from_dec_str(s);
+	return is;
+}

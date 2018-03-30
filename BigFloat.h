@@ -67,4 +67,9 @@ public:
 	operator bool*() const;
 	// phép lấy phần nguyên ở dạng số BigInt
 	operator BigInt() const; // Bao/BigFloat_Bao.cpp
+
+	//Toán tử xuất << ra stream 
+	friend ostream& operator<<(ostream&, const BigFloat&); // chien/BigFloat_Chien.cpp
+	//Toán tử nhập >> vào stream
+	friend istream& operator>>(istream&, BigFloat&); // chien/BigFloat_Chien.cpp
 };
