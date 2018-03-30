@@ -93,6 +93,8 @@ string float_operator(const string& opr1, const string& opr2, const string& opt,
 	if (dest_base == "16")
 		return c.to_hex_str();
 }
+
+// result of a query line with fixed argument format
 string binary_operator_process(const string& opr1, const string& opr2, const string& opt, const string& src_base, const string& dest_base) {
 	if (is_float(opr1) || is_float(opr2))
 		return float_operator(opr1, opr2, opt, src_base, dest_base);
@@ -110,17 +112,15 @@ void process(const vector<string>& args) {
 		}
 	cout << endl;
 }
-int main() {
-	int n;
-	scanf("%d\n", &n);
-	while (n--) {
-		string line;
-		std::getline(cin, line);
+int main(int nargs, char* args[]) {
+	freopen(args[1], "r", stdin);
+	freopen(args[2], "w", stdout);
+	string line;
+	while (std::getline(cin, line)) {
 		stringstream parser(line);
 		string arg;
 		vector<string> args;
 		while (parser >> arg) {
-// 			cout << arg << "\t";
 			args.push_back(arg);
 		}
 		process(args);
