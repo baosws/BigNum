@@ -20,7 +20,7 @@ public:
 	static const BigFloat INF;
 	static const BigFloat ZERO;
 	static const BigFloat NaN;
-	static const BigFloat POW_2_OF_16;
+	static const BigFloat POW_10_OF_16;
     BigFloat operator+(const BigFloat&) const;
     BigFloat operator-(const BigFloat&) const;
 	BigFloat operator-() const;
