@@ -94,8 +94,9 @@ BigFloat BigFloat::operator-(const BigFloat& other) const
 
 
 
-// string BigFloat::to_dec_str() const
-// {
+string BigFloat::to_dec_str() const
+{
+	return "fuck u";
 // 	BigFloat A(*this);
 // 	BigInt nguyen;
 // 	string res = "";
@@ -125,7 +126,7 @@ BigFloat BigFloat::operator-(const BigFloat& other) const
 // 		A.shift_significand_left(16);
 // 	}
 // 	return res;
-// }
+}
 
 void BigFloat::shift_significand_left(int n)
 {

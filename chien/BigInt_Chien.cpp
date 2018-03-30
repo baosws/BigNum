@@ -151,7 +151,3 @@ bool BigInt::operator > (const BigInt &other) const
 			return this->get_bit(i) > other.get_bit(i);
 	return false;
 }
-
-bool BigInt::operator==(int other) const {
-	return BigInt::operator==((BigInt)other);
-}
