@@ -68,6 +68,7 @@ unsigned short BigFloat::get_exponent() const
 	return exponent + (exponent == 0); // 0 -> 1 (-127 -> -126)
 }
 
+// Gán phần mũ cho BigFloat từ một biến Unsigned short 2bytes
 void BigFloat::set_exponent(unsigned short exp)
 {
 	//exp has 16 bits but it only uses 15 bits for exponent
@@ -77,6 +78,7 @@ void BigFloat::set_exponent(unsigned short exp)
 	}
 }
 
+//Trả về phần định trị của BigFloat
 BigInt BigFloat::get_significand() const {
 	BigInt sig;
 	for (int i = 0; i < 112; ++i) {
@@ -84,7 +86,7 @@ BigInt BigFloat::get_significand() const {
 	}
 	return sig;
 }
-
+//Gán phần trị của BigFloat từ một BigInt
 void BigFloat::set_significand(const BigInt & sig) {
 	for (int i = 0; i < 112; ++i) {
 		this->set_bit(i, sig.get_bit(i));
