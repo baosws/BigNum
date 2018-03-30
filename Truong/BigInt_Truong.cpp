@@ -1,12 +1,14 @@
-#include "../includes.h"
-
+﻿#include "../includes.h"
+//Toán tử so sánh bé hơn hoặc bằng
 bool BigInt::operator<=(const BigInt& other) const {
 	return !(*this > other);
 }
+//Toán tử so sánh lớn hơn hoặc bằng
 bool BigInt::operator>=(const BigInt& other) const {
 	return !(*this < other);
 }
 
+//Phép cộng
 //reference at: https://www.geeksforgeeks.org/add-two-bit-strings/
 BigInt BigInt::operator+(const BigInt & num) const {
 	/*
@@ -21,6 +23,7 @@ BigInt BigInt::operator+(const BigInt & num) const {
 	return result;
 }
 
+//Phép trừ
 //reference at : https://www.geeksforgeeks.org/subtract-two-numbers-without-using-arithmetic-operators/
 BigInt BigInt::operator-(const BigInt & num) const {
 	BigInt result;

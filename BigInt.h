@@ -32,15 +32,22 @@ public:
     BigInt operator/(const BigInt&) const; // chien/BigInt_Chien.cpp
 	BigInt operator%(const BigInt&) const; // chien/BigInt_Chien.cpp
 
-	// phép toán trên bit
+	//Toán tử đảo bit
 	BigInt operator~() const; // Bao/BigInt_Bao.cpp
-    BigInt operator!() const; // Bao/BigInt_Bao.cpp
-    BigInt operator&(const BigInt&) const; // Bao/BigInt_Bao.cpp
-    BigInt operator|(const BigInt&) const; // Bao/BigInt_Bao.cpp
-    BigInt operator^(const BigInt&) const; // Bao/BigInt_Bao.cpp
-    BigInt operator<<(int) const; // chien/BigInt_Chien.cpp
-    BigInt operator>>(int) const; // chien/BigInt_Chien.cpp
+    //Toán tử NOT
+	BigInt operator!() const; // Bao/BigInt_Bao.cpp
+    //Toán tử AND
+	BigInt operator&(const BigInt&) const; // Bao/BigInt_Bao.cpp
+    //Toán tử OR
+	BigInt operator|(const BigInt&) const; // Bao/BigInt_Bao.cpp
+    //Toán tử XOR
+	BigInt operator^(const BigInt&) const; // Bao/BigInt_Bao.cpp
+    //Phép dịcg trái một số bit
+	BigInt operator<<(int) const; // chien/BigInt_Chien.cpp
+    //Phép dịch phải một số bit
+	BigInt operator>>(int) const; // chien/BigInt_Chien.cpp
     
+	//Toán tử gán bằng
     BigInt& operator=(const BigInt&); // Bao/BigInt_Bao.cpp
 
 	// phép so sánh
@@ -56,7 +63,8 @@ public:
     operator bool*() const; // Bao/BigInt_Bao.cpp
 	operator long long () const; // Bao/BigInt_Bao.cpp
 	
-	// hàm nhập xuất
+	//Toán tử xuất << ra stream 
 	friend ostream& operator<<(ostream&, const BigInt&); // Bao/BigInt_Bao.cpp
+	//Toán tử nhập >> vào stream
 	friend istream& operator>>(istream&, BigInt&); // Bao/BigInt_Bao.cpp
 };
