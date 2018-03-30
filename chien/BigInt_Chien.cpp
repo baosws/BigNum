@@ -1,17 +1,24 @@
 #include "../includes.h"
 
+// khởi tạo từ mảng bool
 BigInt::BigInt(const bool* const binArr): BigNum(binArr) {}
 
+// khởi tạo copy
 BigInt::BigInt(const BigInt& bgNum) : BigNum(bgNum) {}
 
+// khởi tạo từ số long long
 BigInt::BigInt(long long llNum)
 {
 	this->data[0] = llNum;
 	this->data[1] = -(llNum < 0);
 }
 
+// khởi tạo từ int
 BigInt::BigInt(int num): BigInt((long long) num) {}
 
+
+// phép nhân đầy đủ (128 bit x 128 bit = 256 bit)
+// trả về 1 cặp là 128 bit cao và 128 bit thấp của tích
 pair<BigInt, BigInt> BigInt::full_multiply(const BigInt& Mutiplier) const
 {
 	BigInt A(0);
@@ -38,12 +45,13 @@ pair<BigInt, BigInt> BigInt::full_multiply(const BigInt& Mutiplier) const
 	return pair<BigInt, BigInt>(A, Q);
 }
 
-// need more checking!!!
+// phép nhân mất mát (128 bit x 128 bit = 128 bit)
 BigInt BigInt::operator*(const BigInt& Mutiplier) const
 {
 	return this->full_multiply(Mutiplier).second;
 }
 
+// phép chia đầy đủ, trả về phần dư và thương
 pair<BigInt, BigInt> BigInt::full_divide(const BigInt& Divisor) const
 {
 	if (Divisor == (BigInt)0)
@@ -52,7 +60,7 @@ pair<BigInt, BigInt> BigInt::full_divide(const BigInt& Divisor) const
 
 	BigInt A(0);
 	BigInt M(Divisor);
-	BigInt Q(*this); //Q = Dividend
+	BigInt Q(*this);
 	if (M < (BigInt)0)
 		M = -M;
 	if (Q < (BigInt)0)
@@ -78,14 +86,18 @@ pair<BigInt, BigInt> BigInt::full_divide(const BigInt& Divisor) const
 	return pair<BigInt, BigInt>(A, Q);
 }
 
+// phép chia lấy phần nguyên
 BigInt BigInt::operator/(const BigInt& Divisor) const {
 	return this->full_divide(Divisor).second;
 }
+
+// phép chia lấy phần dư
 BigInt BigInt::operator%(const BigInt& Divisor) const
 {
 	return this->full_divide(Divisor).first;
 }
 
+// phép dịch phải
 BigInt BigInt::operator>>(int amountBits) const
 {
 	BigInt res(*this); //0000.1001 << 2 = 0010.0100
@@ -106,6 +118,7 @@ BigInt BigInt::operator>>(int amountBits) const
 	return res;
 }
 
+// phép dịch trái
 BigInt BigInt::operator<<(int amountBits) const
 {
 	BigInt res(*this); //0000.1001 << 2 = 0010.0100
@@ -132,6 +145,7 @@ BigInt BigInt::operator<<(int amountBits) const
 	return res;
 }
 
+// so sánh bé hơn
 bool BigInt::operator < (const BigInt& other) const 
 {
 	if (this->get_bit(127) != other.get_bit(127))
@@ -142,6 +156,7 @@ bool BigInt::operator < (const BigInt& other) const
 	return false;
 }
 
+// so sánh lớn hơn
 bool BigInt::operator > (const BigInt &other) const
 {
 	if (this->get_bit(127) != other.get_bit(127))

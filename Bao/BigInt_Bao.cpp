@@ -1,5 +1,6 @@
 #include "../includes.h"
 
+// chuyển từ chuỗi thập phân
 BigInt BigInt::from_dec_str(string dec_str) {
 	bool neg = false;
 	if (dec_str[0] == '-') {
@@ -21,6 +22,7 @@ BigInt BigInt::from_dec_str(string dec_str) {
 	return res;
 }
 
+// chuyển thành chuỗi thập phân
 string BigInt::to_dec_str() const {
 	if (this->get_bit(127) == 1)
 		return "-" + (-*this).to_dec_str();
@@ -41,6 +43,7 @@ string BigInt::to_dec_str() const {
 	return res;
 }
 
+// chuyển từ chuỗi nhị phân
 BigInt BigInt::from_bin_str(string binStr)
 {
 	BigInt res;
@@ -57,6 +60,7 @@ BigInt BigInt::from_bin_str(string binStr)
 	return res;
 }
 
+// chuyển thành chuỗi nhị phân
 string BigInt::to_bin_str() const {
 	if (this->get_bit(127) == 1)
 		return "-" + (-*this).to_bin_str();
@@ -68,6 +72,7 @@ string BigInt::to_bin_str() const {
 	return res;
 }
 
+// chuyển thành chuỗi hexa
 string BigInt::to_hex_str() const {
 	if (this->get_bit(127) == 1)
 		return "-" + (-*this).to_hex_str();
@@ -84,6 +89,7 @@ string BigInt::to_hex_str() const {
 	return res;
 }
 
+// chuyển từ chuỗi hexa
 BigInt BigInt::from_hex_str(string hex_str) {
 	bool neg = false;
 	if (hex_str[0] == '-') {
@@ -106,10 +112,12 @@ BigInt BigInt::from_hex_str(string hex_str) {
 	return res;
 }
 
+// lấy số đối
 BigInt BigInt::operator-() const {
 	return BigInt(0) - *this;
 }
 
+// trả về 1 nếu this khác 0, ngước lại 0
 BigInt BigInt::operator!() const {
 	BigInt result;
 	result.data[0] = !(this->data[0] || this->data[1]);
@@ -117,6 +125,7 @@ BigInt BigInt::operator!() const {
 	return result;
 }
 
+// phép not
 BigInt BigInt::operator~() const {
 	BigInt result;
 	result.data[0] = ~this->data[0];
@@ -124,6 +133,7 @@ BigInt BigInt::operator~() const {
 	return result;
 }
 
+// phép and
 BigInt BigInt::operator&(const BigInt& other) const {
 	BigInt result;
 	result.data[0] = this->data[0] & other.data[0];
@@ -131,6 +141,7 @@ BigInt BigInt::operator&(const BigInt& other) const {
 	return result;
 }
 
+// phép or 
 BigInt BigInt::operator|(const BigInt& other) const {
 	BigInt result;
 	result.data[0] = this->data[0] | other.data[0];
@@ -138,6 +149,7 @@ BigInt BigInt::operator|(const BigInt& other) const {
 	return result;
 }
 
+// phép xor
 BigInt BigInt::operator^(const BigInt& other) const {
 	BigInt result;
 	result.data[0] = this->data[0] ^ other.data[0];
@@ -145,24 +157,28 @@ BigInt BigInt::operator^(const BigInt& other) const {
 	return result;
 }
 
+// phép gán
 BigInt& BigInt::operator=(const BigInt& other) {
 	BigNum::operator=(other);
 	return *this;
 }
 
-
+// so sánh bằng
 bool BigInt::operator==(const BigInt& other) const {
 	return this->data[0] == other.data[0] && this->data[1] == other.data[1];
 }
 
+// so sánh khác
 bool BigInt::operator!=(const BigInt& other) const {
 	return !(*this == other);
 }
 
+// trả về true nếu this khác 0, ngược lại false
 BigInt::operator bool() const {
 	return this->data[0] != 0 || this->data[1] != 0;
 }
 
+// trả về mảng bool tương ứng với các bit
 BigInt::operator bool*() const {
 	bool* res = new bool[LENGTH_OF_BITS];
 	for (int i = 0; i < LENGTH_OF_BITS; ++i)
@@ -170,20 +186,21 @@ BigInt::operator bool*() const {
 	return res;
 }
 
+// ép kiểu về long long
 BigInt::operator long long() const {
 	return this->data[0];
 }
 
+// toán tử xuất
 ostream& operator<<(ostream& os, const BigInt& p) {
-	//os << p.to_bin();
-	puts(p.to_bin_str().c_str());
+	os << p.to_dec_str();
 	return os;
-
 }
 
+// toán tử nhập
 istream& operator>>(istream& is, BigInt& p) {
 	string s;
-//	is >> s;
+	is >> s;
 	p = BigInt::from_dec_str(s);
 	return is;
 }

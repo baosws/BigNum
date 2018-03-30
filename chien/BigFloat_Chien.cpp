@@ -105,37 +105,19 @@ string BigFloat::to_dec_str() const
 {
 	if (this->get_bit(127) == 1)
  		return "-" + (-*this).to_dec_str();
- 	BigFloat A(*this), ten = 10.0;
+ 	BigFloat A(*this), ten_17 = 1e17;
 	BigInt B = A.operator BigInt();
  	string res = B.to_dec_str() + ".";
 	A = A - BigFloat(B);
 	do {
-		BigFloat tmp = A * ten;
-		BigInt d = tmp.operator BigInt();
-		res += d.to_dec_str();
+		BigFloat tmp = A * ten_17;
+		string t = tmp.operator BigInt().to_dec_str();
+		while (t.length() < 17)
+			t = "0" + t;
+		res += t;
 		A = tmp - BigFloat(tmp.operator BigInt());
 	} while (A > BigFloat::ZERO);
+	while (res.back() == '0' && res[res.length() - 2] != '.')
+		res.pop_back();
 	return res;
 }
-
-void BigFloat::shift_significand_left(int n)
-{
-	BigInt biNum = this->get_significand();
-	biNum = biNum << n;
-	this->set_significand(biNum);
-}
-
-/*Return the first n-bit string of BigFloat's significand area*/
-string BigFloat::get_first_nbits_of_significand(int n)
-{
-	string res = "";
-	for (int i = 0; i < n; i++)
-		res += this->get_bit(111 - i) + 48;
-	return res;
-}
-/*Convert a binary string to BigFloat store
--Input: Binary String
-- Ouput: A BigFloat
-	Exp: "000010101000" -> BigFloat: 0|2^14-1 - 5|0101000
-*/
-

@@ -1,10 +1,8 @@
 #include "includes.h"
-//#include "helper.h"
 
 bool is_float(const string& num) {
 	return num.find_last_of(".e") != string::npos;
 }
-// 2 10101010 + 1010101
 string int_operator(const string& opr1, const string& opr2, const string& opt, const string& src_base, const string& dest_base) {
 	BigInt a, b, c;
 	// parsing
@@ -64,6 +62,7 @@ string float_operator(const string& opr1, const string& opr2, const string& opt,
 		if (opr2 != "")
 			b = BigFloat::from_bin_str(opr2);
 	}
+	
 	if (src_base == "10") {
 		a = BigFloat::from_dec_str(opr1);
 		if (opr2 != "")
@@ -113,29 +112,12 @@ void process(const vector<string>& args) {
 	cout << endl;
 }
 int main(int nargs, char* args[]) {
-	{
-		string t = "-1.234123e-9";
-// 		BigFloat a = BigFloat::from_dec_str(t);
-// 		BigFloat b = BigFloat::from_dec_str("-1234.123e-12");
-// 		BigFloat a = 1.234123;
-// 		BigFloat b = 0.1;
-// 		cout << a.to_dec_str() << endl;
-// 		cout << b.to_dec_str() << endl;
-// 		cout << ((BigFloat)1.0 / (BigFloat(10.0))).to_dec_str() << endl;
-// 		cout << b.to_bin_str().length() << endl;
-// 		cout << b.to_dec_str() << endl;
-// 		cout << (a * BigFloat::from_dec_str("0.1")).to_dec_str() << endl;
-// 		cout << t << endl;
-		BigFloat ten = 1e-5;
-		BigFloat a = (BigFloat)1.0 / ten;
-// 		cout << ten.to_dec_str() << endl;
-		cout << ten.to_dec_str() << endl;
-		return 0;
-	}
+	cout << ((BigFloat)0.1).to_dec_str() << endl;
+	return 0;
 	freopen(args[1], "r", stdin);
 	freopen(args[2], "w", stdout);
 	string line;
-	while (std::getline(cin, line)) {
+	for (int i = 0; std::getline(cin, line); ++i) {
 		stringstream parser(line);
 		string arg;
 		vector<string> args;

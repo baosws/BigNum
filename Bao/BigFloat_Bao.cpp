@@ -1,10 +1,21 @@
 #include "../includes.h"
 
+// số vô cực
 const BigFloat BigFloat::INF = BigFloat((bool*)(BigInt(MAX_EXP) << 112));
+// số +0
 const BigFloat BigFloat::ZERO = BigFloat();
+// số NaN
 const BigFloat BigFloat::NaN = BigFloat((bool*)((BigInt(MAX_EXP) << 112) + (BigInt)1));
-const BigFloat BigFloat::POW_10_OF_16 = BigFloat(pow(10, 16));
 
+// trả về mảng bool tương ứng với các bit
+BigFloat::operator bool *() const {
+	bool* res = new bool[LENGTH_OF_BITS];
+	for (int i = 0; i < LENGTH_OF_BITS; ++i)
+		res[i] = this->get_bit(i);
+	return res;
+}
+
+// khởi tạo từ số nguyên BigInt
 BigFloat::BigFloat(BigInt num) {
 	if (num == (BigInt)0) {
 		*this = BigFloat::ZERO;
@@ -26,17 +37,19 @@ BigFloat::BigFloat(BigInt num) {
 	this->set_exponent(exp + BIAS);
 	this->set_significand(num);
 }
-		
 
+// so sánh bằng
 bool BigFloat::operator==(const BigFloat& p) const {
 	return this->data[0] == p.data[0]
 		&& this->data[1] == p.data[1];
 }
 
+// so sánh khác
 bool BigFloat::operator!=(const BigFloat& p) const {
 	return !(*this == p);
 }
 
+// phép gán
 BigFloat& BigFloat::operator=(const BigFloat& other) {
 	BigNum::operator=(other);
 	return *this;
@@ -220,7 +233,7 @@ BigFloat BigFloat::from_dec_str(string dec_str) {
 		return BigFloat::INF;
 	if (dec_str == "nan")
 		return BigFloat::NaN;
-	while (dec_str[0] == '0' && dec_str[1] != '.')
+	while (dec_str.length() > 1 && dec_str[0] == '0' && dec_str[1] != '.')
 		dec_str.erase(0, 1);
 	int dot = dec_str.find('.');
 	int e = dec_str.find('e');
@@ -259,10 +272,9 @@ BigFloat::operator BigInt() const {
 	if (*this < BigFloat::ZERO)
 		return -((-*this).operator BigInt());
 	BigInt res = this->get_signed_significand();
-	int exp = this->get_exponent() - BIAS - 112;
-	if (exp > 0)
-		res = res << exp;
+	int exp = this->get_exponent() - BIAS;
 	if (exp < 0)
-		res = res >> -exp;
+		return (BigInt)0;
+	res = res >> (112 - exp);
 	return res;
 }

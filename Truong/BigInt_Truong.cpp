@@ -1,5 +1,4 @@
 #include "../includes.h"
-BigInt::BigInt() : BigNum() {}
 
 bool BigInt::operator<=(const BigInt& other) const {
 	return !(*this > other);

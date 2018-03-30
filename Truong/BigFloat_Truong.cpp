@@ -99,16 +99,31 @@ BigFloat BigFloat::from_bin_str(string bin_str) {
 		return BigFloat::INF;
 	if (bin_str == "nan")
 		return BigFloat::NaN;
-	
+	while (bin_str.length() > 1 && bin_str[0] == '0' && bin_str[1] != '.')
+		bin_str.erase(0, 1);
+	int dot = bin_str.find('.');
 	int e = bin_str.find('e');
-	string significand = bin_str.substr(0, e);
-	significand.erase(1, 1);
-	while (significand.length() < 113)
-		significand += "0";
-	int exp = (long long)BigInt::from_bin_str(bin_str.substr(e + 1, bin_str.length() - 1 - e));
+	if (dot == (int)string::npos) {
+		bin_str.insert(e - 1, ".0");
+		dot = e - 2;
+	}
+	if (e == (int)string::npos) {
+		while (bin_str.back() == '0' && bin_str[bin_str.length() - 2] != '.')
+			bin_str.pop_back();
+		bin_str += "e0";
+		e = bin_str.length() - 2;
+	}
+	string bin_significand = bin_str.substr(0, e);
+	bin_significand.erase(dot, 1);
+	while (bin_significand.length() < 113)
+		bin_significand += "0";
+	while (bin_significand.length() > 113)
+		bin_significand.pop_back();
+	int bin_exp = (long long)BigInt::from_bin_str(bin_str.substr(e + 1, bin_str.length() - 1 - e));
+	bin_exp += (dot - 1);
 	BigFloat res;
-	res.set_exponent(exp + BIAS);
-	res.set_significand(BigInt::from_bin_str(significand));
+	res.set_exponent(bin_exp + BIAS);
+	res.set_significand(BigInt::from_bin_str(bin_significand));
 	if (neg)
 		res = -res;
 	return res;

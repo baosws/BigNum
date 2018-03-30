@@ -3,72 +3,68 @@
 
 class BigFloat : public BigNum {
 public:
+	// hàm khởi tạo
 	BigFloat(const bool* const bits);
 	BigFloat(const BigFloat&);
 	BigFloat(double);
-	BigFloat(BigInt);
+	BigFloat(BigInt); // Bao/BigFloat_Bao.cpp
 	BigFloat() :BigNum(){}
 
-	static BigFloat from_dec_str(string);
+	// chuyển từ chuỗi sang số
+	static BigFloat from_dec_str(string); // Bao/BigFloat_Bao.cpp
 	static BigFloat from_bin_str(string);
-	static BigFloat from_hex_str(string);
+	static BigFloat from_hex_str(string); // Bao/BigFloat_Bao.cpp
 
+	// chuyển từ số sang chuỗi
 	string to_dec_str() const;
-	string to_bin_str() const;
+	string to_bin_str() const; // Bao/BigFloat_Bao.cpp
 	string to_hex_str() const;
 	
-	static const BigFloat INF;
-	static const BigFloat ZERO;
-	static const BigFloat NaN;
-	static const BigFloat POW_10_OF_16;
+	// các số đặc biệt
+	static const BigFloat INF; // Bao/BigFloat_Bao.cpp
+	static const BigFloat ZERO; // Bao/BigFloat_Bao.cpp
+	static const BigFloat NaN; // Bao/BigFloat_Bao.cpp
+	
+	// các phép toán số học
     BigFloat operator+(const BigFloat&) const;
     BigFloat operator-(const BigFloat&) const;
 	BigFloat operator-() const;
-    BigFloat operator*(const BigFloat&) const;
-    BigFloat operator/(const BigFloat&) const;
+    BigFloat operator*(const BigFloat&) const; // Bao/BigFloat_Bao.cpp
+    BigFloat operator/(const BigFloat&) const; // Bao/BigFloat_Bao.cpp
 
+	// lấy phần mũ
 	unsigned short get_exponent() const;
+	// thay đổi phần mũ
 	void set_exponent(unsigned short exp);
 
+	// lấy phần trị
 	BigInt get_significand() const;
+	// thay đổi phần trị
 	void set_significand(const BigInt& biNum);
-	
-	void shift_significand_right();
-	void shift_significand_left(int);
 
-	bool is_exponent_overflow() const;
-	bool is_exponent_underflow() const;
-	
-	bool is_significand_overflow() const;
-
+	// hàm kiểm tra loại số
 	bool is_zero() const;
 	bool is_normalized() const;
 	bool is_denormalized() const;
 	bool is_inf() const;
 	bool is_nan() const;
 
+	// lấy phần trị, kèm theo số 1 (1.xxx, nếu có), ở dạng số có dấu
 	BigInt get_signed_significand() const;
-	friend BigFloat from_another_significand(string);
-	string get_first_nbits_of_significand(int n);
-	//-----------------
-    BigFloat& operator+=(const BigFloat&);
-    BigFloat& operator-=(const BigFloat&);
-    BigFloat& operator*=(const BigFloat&);
-    BigFloat& operator/=(const BigFloat&);
 
-    BigFloat& operator=(const BigFloat&);
+	// phép gán
+    BigFloat& operator=(const BigFloat&); // Bao/BigFloat_Bao.cpp
     
-	bool operator==(const BigFloat&) const;
-    bool operator!=(const BigFloat&) const;
-    bool operator<(const BigFloat&) const;
-    bool operator>(const BigFloat&) const;
-    bool operator<=(const BigFloat&) const;
-    bool operator>=(const BigFloat&) const;
+	// phép so sánh
+	bool operator==(const BigFloat&) const; // Bao/BigFloat_Bao.cpp
+    bool operator!=(const BigFloat&) const; // Bao/BigFloat_Bao.cpp
+    bool operator<(const BigFloat&) const; // Bao/BigFloat_Bao.cpp
+    bool operator>(const BigFloat&) const; // Bao/BigFloat_Bao.cpp
+    bool operator<=(const BigFloat&) const; // Bao/BigFloat_Bao.cpp
+    bool operator>=(const BigFloat&) const; // Bao/BigFloat_Bao.cpp
 
-    operator bool() const;
-	operator BigInt() const;
-private :
-	void add_signed_significands(const BigFloat&X, const BigFloat&Y);
-
-	operator double() const;
+	// trả về mảng bool tương ứng với các bit
+	operator bool*() const;
+	// phép lấy phần nguyên ở dạng số BigInt
+	operator BigInt() const; // Bao/BigFloat_Bao.cpp
 };
