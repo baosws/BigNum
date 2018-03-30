@@ -113,7 +113,7 @@ void process(const vector<string>& args) {
 }
 int main(int nargs, char* args[]) {
 	freopen(args[1], "r", stdin);
-	freopen(args[2], "w", stdout);
+//	freopen(args[2], "w", stdout);
 	string line;
 	for (int i = 0; std::getline(cin, line); ++i) {
 		stringstream parser(line);
@@ -123,5 +123,6 @@ int main(int nargs, char* args[]) {
 			args.push_back(arg);
 		}
 		process(args);
+		cout <<  endl;
 	}
 }
