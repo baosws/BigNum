@@ -23,151 +23,149 @@ namespace bpp {
     template <size_t Size>
     class bigint: public bignum<Size> {
         typedef typename bignum<Size>::ctype ctype;
-        public:
-            using bignum<Size>::bignum;
-            template <size_t _Size>
-                friend class bigint;
+    public:
+        using bignum<Size>::bignum;
+        
+        template <size_t _Size>
+        friend class bigint;
 
-            template <size_t _Size>
-                bigint(const bigint<_Size>& other) noexcept {
-                    std::cerr << "bigint copy ctor\n";
-                    constexpr int nsize = std::min(Size, _Size);
-                    std::copy(other.data.begin(), other.data.begin() + nsize, this->data.begin());
-                }
+        template <size_t _Size>
+        bigint(const bigint<_Size>& other) noexcept {
+            std::cerr << "bigint copy ctor\n";
+            constexpr int common_size = std::min(Size, _Size);
+            std::copy(other.data.begin(), other.data.begin() + common_size, this->data.begin());
+        }
 
-            template <size_t _Size>
-                bigint(bigint<_Size>&& other) noexcept {
-                    std::cerr << "bigint move ctor\n";
-                    constexpr int nsize = std::min(Size, _Size);
-                    std::move(other.data.begin(), other.data.begin() + nsize, this->data.begin());
-                }
-            // logical operators
-            impl(^);
-            impl(|);
-            impl(&);
+        template <size_t _Size>
+        bigint(bigint<_Size>&& other) noexcept {
+            std::cerr << "bigint move ctor\n";
+            constexpr int nsize = std::min(Size, _Size);
+            std::move(other.data.begin(), other.data.begin() + nsize, this->data.begin());
+        }
+        
+        // logical operators
+        impl(^);
+        impl(|);
+        impl(&);
 
-            bigint operator!() const noexcept {
-                bigint res;
-                res.data[0] = 1;
-                for (ctype& block : this->data) {
-                    if (block != 0) {
-                        res.data[0] = 0;
-                        break;
-                    }
-                }
-                return res;
-            }
-            
-            bigint operator~() const noexcept {
-                bigint res(*this);
-                for (ctype& block : res.data) {
-                    block = ~block;
-                }
-                return res;
-            }
-
-            bigint& operator<<=(size_t dist) noexcept {
-                size_t st = dist >> 6, d = dist & 63;
-                for (size_t i = 0; i < st && i < Size; ++i) {
-                    this->data[i] = 0;
-                }
-                ctype last = 0;
-                for (size_t i = st; i < Size; ++i) {
-                    ctype tmp = this->data[i] >> (64 - d); 
-                    this->data[i] = (this->data[i] << d) | last;
-                    last = tmp;
+        bigint operator!() const noexcept {
+            bigint res;
+            res.data[0] = 1;
+            for (ctype& block : this->data) {
+                if (block != 0) {
+                    res.data[0] = 0;
+                    break;
                 }
             }
-
-            bigint operator<<(size_t dist) const noexcept {
-                bigint res(*this);
-                res <<= dist;
-                return res;
+            return res;
+        }
+        
+        bigint operator~() const noexcept {
+            bigint res(*this);
+            for (ctype& block : res.data) {
+                block = ~block;
             }
+            return res;
+        }
 
-            bigint& operator>>=(size_t dist) noexcept {
-                // to do
-                return *this;
+        bigint& operator<<=(size_t dist) noexcept {
+            size_t st = dist >> 6, d = dist & 63;
+            for (size_t i = 0; i < st && i < Size; ++i) {
+                this->data[i] = 0;
             }
-
-            bigint operator>>(size_t dist) const noexcept {
-                bigint res(*this);
-                res >>= dist;
-                return res;
+            ctype last = 0;
+            for (size_t i = st; i < Size; ++i) {
+                ctype tmp = this->data[i] >> (64 - d); 
+                this->data[i] = (this->data[i] << d) | last;
+                last = tmp;
             }
+            return *this;
+        }
 
-            // arithmetic operators
-            bigint& operator+=(const bigint& other) noexcept {
-                ctype c = 0;
-                for (size_t i = 0; i < Size; ++i) {
-                    ctype t = 0;
-                    if (this->data[i] > std::numeric_limits<ctype>::max() - c) {
-                        t = 1;
-                    }
-                    this->data[i] += c;
-                    if (this->data[i] > std::numeric_limits<ctype>::max() - other.data[i]) {
-                        t = 1;
-                    }
-                    this->data[i] += other.data[i];
-                    c = t;
+        bigint operator<<(size_t dist) const noexcept {
+            bigint res(*this);
+            res <<= dist;
+            return res;
+        }
+
+        bigint& operator>>=(size_t dist) noexcept {
+            size_t st = dist >> 6, d = dist & 63;
+            ctype v = this->data.back() & (1ull << 63), last = std::numeric_limits<ctype>::max() << (63 - d);
+            std::copy(this->data.begin() + st, this->data.end(), this->data.begin());
+            std::fill(this->data.end() - st, this->data.end(), v);
+            for (int i = Size - st - 1; i >= 0; --i) {
+                ctype tmp = this->data[i] & ((1ull << d) - 1);
+                this->data[i] = (this->data[i] >> d) | last;
+                last = tmp << (63 - d);
+            }
+            return *this;
+        }
+
+        bigint operator>>(size_t dist) const noexcept {
+            bigint res(*this);
+            res >>= dist;
+            return res;
+        }
+
+        // arithmetic operators
+        bigint& operator+=(const bigint& other) noexcept {
+            ctype c = 0;
+            for (size_t i = 0; i < Size; ++i) {
+                ctype t = 0;
+                if (this->data[i] > std::numeric_limits<ctype>::max() - c) {
+                    t = 1;
                 }
-                return *this;
-            }
-
-            bigint operator+(const bigint& other) const noexcept {
-                bigint res(*this);
-                res += other;
-                return res;
-            }
-
-            bigint operator+(bigint&& other) const noexcept {
-                bigint res(std::move(other));
-                res += *this;
-                return res;
-            }
-
-            bigint& operator-=(const bigint& other) noexcept {
-                ctype c = 0;
-                for (size_t i = 0; i < Size; ++i) {
-                    ctype t = 0;
-                    if (other.data[i] > std::numeric_limits<ctype>::max() - c) {
-                        t = 1;
-                    }
-                    other.data[i] += c;
-                    if (this->data[i] < other.data[i]) {
-                        t = 1;
-                    }
-                    this->data[i] -= other.data[i];
-                    c = t;
+                this->data[i] += c;
+                if (this->data[i] > std::numeric_limits<ctype>::max() - other.data[i]) {
+                    t = 1;
                 }
-                return *this;
+                this->data[i] += other.data[i];
+                c = t;
             }
+            return *this;
+        }
 
-            bigint operator-() const noexcept {
-                bigint res(~*this);
-                for (size_t i = 0; i < Size; ++i) {
-                    if (res.data[i] == std::numeric_limits<ctype>::max()) {
-                        res.data[i] = 0;
-                    }
-                    else {
-                        ++res.data[i];
-                        break;
-                    }
+        bigint operator+(const bigint& other) const noexcept {
+            bigint res(*this);
+            res += other;
+            return res;
+        }
+
+        bigint operator+(bigint&& other) const noexcept {
+            bigint res(std::move(other));
+            res += *this;
+            return res;
+        }
+
+        bigint operator-() const noexcept {
+            bigint res(~*this);
+            for (size_t i = 0; i < Size; ++i) {
+                if (res.data[i] == std::numeric_limits<ctype>::max()) {
+                    res.data[i] = 0;
                 }
-                return res;
+                else {
+                    ++res.data[i];
+                    break;
+                }
             }
-            
-            bigint operator-(const bigint& other) const noexcept {
-                bigint res(*this);
-                res -= other;
-                return res;
-            }
+            return res;
+        }
+        
+        bigint& operator-=(const bigint& other) noexcept {
+            this->operator+=(-other);
+            return *this;
+        }
 
-            bigint operator-(bigint&& other) const noexcept {
-                bigint res(std::move(other));
-                res -= *this;
-                res = -res;
-                return res;
-            }
+        bigint operator-(const bigint& other) const noexcept {
+            bigint res(*this);
+            res -= other;
+            return res;
+        }
+
+        bigint operator-(bigint&& other) const noexcept {
+            bigint res(std::move(other));
+            res -= *this;
+            return -res;
+        }
     };
 }
